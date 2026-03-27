@@ -1,0 +1,20 @@
+[Unit]
+Description=moco-admin backend service
+After=network.target
+
+[Service]
+Type=forking
+User=www
+Group=www
+WorkingDirectory=/opt/moco-admin
+Environment=JAVA_HOME=/opt/java/openjdk-17
+Environment=JVM_OPTS=-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Duser.timezone=Asia/Shanghai -Xms512m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError
+ExecStart=/opt/moco-admin/moco.sh start
+ExecStop=/opt/moco-admin/moco.sh stop
+ExecReload=/opt/moco-admin/moco.sh restart
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

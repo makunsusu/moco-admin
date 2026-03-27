@@ -132,6 +132,7 @@ npm run dev -- --port 18081
 - 架构文档：[architecture.md](/Users/makun/llm_project/moco-admin/docs/architecture.md)
 - 部署文档：[deployment.md](/Users/makun/llm_project/moco-admin/docs/deployment.md)
 - 版本记录：[CHANGELOG.md](/Users/makun/llm_project/moco-admin/CHANGELOG.md)
+- 部署示例文件：[deploy](/Users/makun/llm_project/moco-admin/deploy)
 
 ## 开发建议
 

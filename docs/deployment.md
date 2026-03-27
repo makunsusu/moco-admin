@@ -175,7 +175,34 @@ server {
 }
 ```
 
-## 9. 关键配置文件
+仓库已提供可直接参考的站点配置文件：
+
+- `deploy/nginx.moco-admin.conf`
+
+## 9. systemd 服务示例
+
+Linux 生产环境建议使用 `systemd` 托管后端服务。仓库已提供示例文件：
+
+- `deploy/moco-admin.service`
+
+使用方式示例：
+
+```bash
+sudo cp deploy/moco-admin.service /etc/systemd/system/moco-admin.service
+sudo systemctl daemon-reload
+sudo systemctl enable moco-admin
+sudo systemctl start moco-admin
+sudo systemctl status moco-admin
+```
+
+上线前请先按实际环境修改：
+
+- `User` / `Group`
+- `WorkingDirectory`
+- `JAVA_HOME`
+- `ExecStart` / `ExecStop` 路径
+
+## 10. 关键配置文件
 
 - `moco-admin/src/main/resources/application.yml`
 - `moco-admin/src/main/resources/application-druid.yml`
@@ -190,18 +217,19 @@ server {
 - 日志目录
 - 验证码、注册开关
 
-## 10. 生产建议
+## 11. 生产建议
 
 - 固定使用 JDK 17
 - 生产环境修改默认账号密码
 - Redis 开启持久化
 - 日志目录独立挂载并归档
 - 使用 Nginx 做统一入口和 HTTPS
+- 使用 `systemd` 托管后端服务
 - 将公开接口和文档能力按环境开关收紧
 
-## 11. 常见问题排查
+## 12. 常见问题排查
 
-### 11.1 页面出现乱码
+### 12.1 页面出现乱码
 
 排查顺序：
 
@@ -215,7 +243,7 @@ server {
 docker exec moco-redis sh -lc "redis-cli --raw KEYS 'sys_dict:*' | xargs -r redis-cli DEL"
 ```
 
-### 11.2 后端无法连接 MySQL
+### 12.2 后端无法连接 MySQL
 
 检查：
 
@@ -223,7 +251,7 @@ docker exec moco-redis sh -lc "redis-cli --raw KEYS 'sys_dict:*' | xargs -r redi
 - `application-druid.yml` 中的连接参数是否正确
 - JDK 与驱动是否兼容
 
-### 11.3 前端接口 404
+### 12.3 前端接口 404
 
 检查：
 
@@ -231,7 +259,7 @@ docker exec moco-redis sh -lc "redis-cli --raw KEYS 'sys_dict:*' | xargs -r redi
 - Nginx 是否反向代理 `/prod-api`
 - 后端是否正常启动
 
-## 12. 默认访问信息
+## 13. 默认访问信息
 
 - 后端接口：`http://localhost:8080`
 - Swagger：`http://localhost:8080/swagger-ui/index.html`
