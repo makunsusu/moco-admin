@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.FinMarketMapper">
+
+    <resultMap type="FinMarket" id="FinMarketResult">
+        <id property="marketId" column="market_id"/>
+        <result property="marketCode" column="market_code"/>
+        <result property="marketName" column="market_name"/>
+        <result property="marketShortName" column="market_short_name"/>
+        <result property="marketType" column="market_type"/>
+        <result property="marketRegion" column="market_region"/>
+        <result property="website" column="website"/>
+        <result property="marketSort" column="market_sort"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectMarketVo">
+        select market_id, market_code, market_name, market_short_name, market_type, market_region,
+               website, market_sort, status, create_by, create_time, update_by, update_time, remark
+        from fin_market
+    </sql>
+
+    <select id="selectMarketList" parameterType="FinMarket" resultMap="FinMarketResult">
+        <include refid="selectMarketVo"/>
+        <where>
+            <if test="marketCode != null and marketCode != ''">
+                and market_code like concat('%', #{marketCode}, '%')
+            </if>
+            <if test="marketName != null and marketName != ''">
+                and market_name like concat('%', #{marketName}, '%')
+            </if>
+            <if test="marketType != null and marketType != ''">
+                and market_type = #{marketType}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+        order by market_sort asc, market_id asc
+    </select>
+
+    <select id="selectMarketById" parameterType="Long" resultMap="FinMarketResult">
+        <include refid="selectMarketVo"/>
+        where market_id = #{marketId}
+    </select>
+
+    <select id="checkMarketCodeUnique" parameterType="String" resultMap="FinMarketResult">
+        <include refid="selectMarketVo"/>
+        where market_code = #{marketCode}
+        limit 1
+    </select>
+
+    <select id="checkMarketNameUnique" parameterType="String" resultMap="FinMarketResult">
+        <include refid="selectMarketVo"/>
+        where market_name = #{marketName}
+        limit 1
+    </select>
+
+    <insert id="insertMarket" parameterType="FinMarket" useGeneratedKeys="true" keyProperty="marketId">
+        insert into fin_market(
+            <if test="marketCode != null and marketCode != ''">market_code,</if>
+            <if test="marketName != null and marketName != ''">market_name,</if>
+            <if test="marketShortName != null and marketShortName != ''">market_short_name,</if>
+            <if test="marketType != null and marketType != ''">market_type,</if>
+            <if test="marketRegion != null and marketRegion != ''">market_region,</if>
+            <if test="website != null and website != ''">website,</if>
+            <if test="marketSort != null">market_sort,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time
+        ) values (
+            <if test="marketCode != null and marketCode != ''">#{marketCode},</if>
+            <if test="marketName != null and marketName != ''">#{marketName},</if>
+            <if test="marketShortName != null and marketShortName != ''">#{marketShortName},</if>
+            <if test="marketType != null and marketType != ''">#{marketType},</if>
+            <if test="marketRegion != null and marketRegion != ''">#{marketRegion},</if>
+            <if test="website != null and website != ''">#{website},</if>
+            <if test="marketSort != null">#{marketSort},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            sysdate()
+        )
+    </insert>
+
+    <update id="updateMarket" parameterType="FinMarket">
+        update fin_market
+        <set>
+            <if test="marketCode != null and marketCode != ''">market_code = #{marketCode},</if>
+            <if test="marketName != null and marketName != ''">market_name = #{marketName},</if>
+            <if test="marketShortName != null">market_short_name = #{marketShortName},</if>
+            <if test="marketType != null and marketType != ''">market_type = #{marketType},</if>
+            <if test="marketRegion != null">market_region = #{marketRegion},</if>
+            <if test="website != null">website = #{website},</if>
+            <if test="marketSort != null">market_sort = #{marketSort},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where market_id = #{marketId}
+    </update>
+
+    <delete id="deleteMarketByIds" parameterType="Long">
+        delete from fin_market where market_id in
+        <foreach collection="array" item="marketId" open="(" separator="," close=")">
+            #{marketId}
+        </foreach>
+    </delete>
+
+</mapper>
