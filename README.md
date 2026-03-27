@@ -21,6 +21,16 @@
 - 已新增 `理财大师 -> 交易市场管理` 业务模块
 - 统一的 `moco` Logo、标题、脚本和命名体系
 
+## 系统截图
+
+### 工作台首页
+
+![moco workbench](docs/screenshots/dashboard.png)
+
+### 交易市场管理
+
+![moco finance market](docs/screenshots/finance-market.png)
+
 ## 技术栈
 
 后端：
