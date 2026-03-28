@@ -82,6 +82,14 @@ mysql -uroot -p moco_admin < sql/quartz.sql
 
 ### 6.1 构建
 
+建议先准备环境变量：
+
+```bash
+cp .env.example .env
+```
+
+然后按实际环境导出变量，或者交给 `systemd` / 容器注入。
+
 ```bash
 mvn clean package -DskipTests
 ```
@@ -217,6 +225,24 @@ sudo systemctl status moco-admin
 - 日志目录
 - 验证码、注册开关
 
+推荐通过环境变量覆盖敏感配置：
+
+- `MOCO_DB_URL`
+- `MOCO_DB_USERNAME`
+- `MOCO_DB_PASSWORD`
+- `MOCO_REDIS_HOST`
+- `MOCO_REDIS_PORT`
+- `MOCO_REDIS_PASSWORD`
+- `MOCO_TOKEN_SECRET`
+- `MOCO_DRUID_CONSOLE_ENABLED`
+- `MOCO_DRUID_USERNAME`
+- `MOCO_DRUID_PASSWORD`
+- `MOCO_SWAGGER_ENABLED`
+
+仓库已提供示例文件：
+
+- `.env.example`
+
 ## 11. 生产建议
 
 - 固定使用 JDK 17
@@ -225,6 +251,7 @@ sudo systemctl status moco-admin
 - 日志目录独立挂载并归档
 - 使用 Nginx 做统一入口和 HTTPS
 - 使用 `systemd` 托管后端服务
+- Swagger 与 Druid 控制台默认保持关闭，仅在受控环境临时开启
 - 将公开接口和文档能力按环境开关收紧
 
 ## 12. 常见问题排查

@@ -6,16 +6,16 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://localhost:3306/moco_admin?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_general_ci&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                username: root
-                password: password
+                url: ${MOCO_DB_URL:jdbc:mysql://localhost:3306/moco_admin?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_general_ci&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8}
+                username: ${MOCO_DB_USERNAME:root}
+                password: ${MOCO_DB_PASSWORD:password}
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
                 enabled: false
-                url: 
-                username: 
-                password: 
+                url:
+                username:
+                password:
             # 初始连接数
             initialSize: 5
             # 最小连接池数量
@@ -42,13 +42,13 @@ spring:
             webStatFilter: 
                 enabled: true
             statViewServlet:
-                enabled: true
+                enabled: ${MOCO_DRUID_CONSOLE_ENABLED:false}
                 # 设置白名单，不填则允许所有访问
-                allow:
+                allow: ${MOCO_DRUID_ALLOW:127.0.0.1}
                 url-pattern: /druid/*
                 # 控制台管理用户名和密码
-                login-username: moco
-                login-password: 123456
+                login-username: ${MOCO_DRUID_USERNAME:moco}
+                login-password: ${MOCO_DRUID_PASSWORD:change-me}
             filter:
                 stat:
                     enabled: true

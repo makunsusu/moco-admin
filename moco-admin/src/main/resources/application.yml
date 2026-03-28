@@ -72,13 +72,13 @@ spring:
     # redis 配置
     redis:
       # 地址
-      host: localhost
+      host: ${MOCO_REDIS_HOST:localhost}
       # 端口，默认为6379
-      port: 6379
+      port: ${MOCO_REDIS_PORT:6379}
       # 数据库索引
-      database: 0
+      database: ${MOCO_REDIS_DATABASE:0}
       # 密码
-      password:
+      password: ${MOCO_REDIS_PASSWORD:}
       # 连接超时时间
       timeout: 10s
       lettuce:
@@ -97,9 +97,9 @@ token:
   # 令牌自定义标识
   header: Authorization
   # 令牌密钥
-  secret: abcdefghijklmnopqrstuvwxyz
+  secret: ${MOCO_TOKEN_SECRET:change-me-before-production}
   # 令牌有效期（默认30分钟）
-  expireTime: 30
+  expireTime: ${MOCO_TOKEN_EXPIRE:30}
 
 # MyBatis配置
 mybatis:
@@ -121,14 +121,14 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
-    enabled: true
+    enabled: ${MOCO_SWAGGER_ENABLED:false}
     path: /swagger-ui.html
     tags-sorter: alpha
   group-configs:
     - group: 'default'
-      display-name: '测试模块'
+      display-name: 'moco-admin'
       paths-to-match: '/**'
-      packages-to-scan: com.moco.web.controller.tool
+      packages-to-scan: com.moco.web.controller
 
 # 防盗链配置
 referer:

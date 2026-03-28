@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +26,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * @author moco
  */
 @Tag(name = "用户信息管理")
+@Profile("dev")
 @RestController
 @RequestMapping("/test/user")
 public class TestController extends BaseController
 {
     private final static Map<Integer, UserEntity> users = new LinkedHashMap<Integer, UserEntity>();
     {
-        users.put(1, new UserEntity(1, "admin", "admin123", "15888888888"));
-        users.put(2, new UserEntity(2, "moco", "admin123", "15666666666"));
+        users.put(1, new UserEntity(1, "admin", "demo-password-1", "15888888888"));
+        users.put(2, new UserEntity(2, "moco", "demo-password-2", "15666666666"));
     }
     
     @Operation(summary = "获取用户列表")

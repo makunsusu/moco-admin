@@ -90,6 +90,7 @@ docker compose up -d
 ### 3. 构建后端
 
 ```bash
+cp .env.example .env
 mvn clean package -DskipTests
 ```
 
@@ -120,9 +121,11 @@ npm run dev -- --port 18081
 
 - 前端开发地址：`http://localhost:18081`
 - 后端接口地址：`http://localhost:8080`
-- Swagger 地址：`http://localhost:8080/swagger-ui/index.html`
+- Swagger 地址：默认关闭，设置 `MOCO_SWAGGER_ENABLED=true` 后访问 `http://localhost:8080/swagger-ui/index.html`
 - 默认账号：`admin`
 - 默认密码：`admin123`
+
+首次部署后请立即修改默认管理员密码，并使用环境变量覆盖数据库、Redis、JWT、Druid 控制台等敏感配置。
 
 ## 当前定制内容
 
@@ -143,6 +146,7 @@ npm run dev -- --port 18081
 - 部署文档：[deployment.md](/Users/makun/llm_project/moco-admin/docs/deployment.md)
 - 版本记录：[CHANGELOG.md](/Users/makun/llm_project/moco-admin/CHANGELOG.md)
 - 部署示例文件：[deploy](/Users/makun/llm_project/moco-admin/deploy)
+- 环境变量示例：[.env.example](/Users/makun/llm_project/moco-admin/.env.example)
 
 ## 开发建议
 

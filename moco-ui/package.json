@@ -8,7 +8,9 @@
     "dev": "vue-cli-service serve",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
-    "preview": "node build/index.js --preview"
+    "preview": "node build/index.js --preview",
+    "audit": "npm audit",
+    "audit:prod": "npm audit --omit=dev"
   },
   "keywords": [
     "vue",
@@ -21,7 +23,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yangzongzhuan/RuoYi-Vue.git"
+    "url": "https://github.com/makunsusu/moco-admin.git"
   },
   "dependencies": {
     "@riophae/vue-treeselect": "0.4.0",
@@ -32,7 +34,7 @@
     "element-ui": "2.15.14",
     "file-saver": "2.0.5",
     "fuse.js": "6.4.3",
-    "highlight.js": "9.18.5",
+    "highlight.js": "11.11.1",
     "js-beautify": "1.13.0",
     "js-cookie": "3.0.1",
     "jsencrypt": "3.0.0-rc.1",
@@ -62,8 +64,8 @@
     "vue-template-compiler": "2.6.12"
   },
   "engines": {
-    "node": ">=8.9",
-    "npm": ">= 3.0.0"
+    "node": ">=18",
+    "npm": ">=9"
   },
   "browserslist": [
     "> 1%",
