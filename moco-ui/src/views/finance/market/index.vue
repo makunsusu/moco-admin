@@ -8,7 +8,14 @@
         <el-input v-model="queryParams.marketName" placeholder="请输入市场名称" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="市场类型" prop="marketType">
-        <el-input v-model="queryParams.marketType" placeholder="请输入市场类型" clearable @keyup.enter.native="handleQuery" />
+        <el-select v-model="queryParams.marketType" placeholder="请选择市场类型" clearable>
+          <el-option
+            v-for="item in marketTypeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
@@ -93,7 +100,14 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="市场类型" prop="marketType">
-              <el-input v-model="form.marketType" placeholder="请输入市场类型" />
+              <el-select v-model="form.marketType" placeholder="请选择市场类型" style="width: 100%">
+                <el-option
+                  v-for="item in marketTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -148,6 +162,12 @@ export default {
       showSearch: true,
       total: 0,
       marketList: [],
+      marketTypeOptions: [
+        { label: '证券交易所', value: '证券交易所' },
+        { label: '期货交易所', value: '期货交易所' },
+        { label: '能源交易中心', value: '能源交易中心' },
+        { label: '综合交易所', value: '综合交易所' }
+      ],
       title: '',
       open: false,
       queryParams: {
