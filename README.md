@@ -164,6 +164,80 @@ moco.bat web-stop
 
 首次部署后请立即修改默认管理员密码，并使用环境变量覆盖数据库、Redis、JWT、Druid 控制台等敏感配置。
 
+## 验证码开关
+
+登录页和注册页验证码不是前端写死，而是由系统参数控制。
+
+- 参数键：`sys.account.captchaEnabled`
+- `true`：开启验证码
+- `false`：关闭验证码
+
+### 方式一：后台页面修改
+
+开启步骤：
+
+1. 登录后台
+2. 进入 `系统管理 -> 参数设置`
+3. 搜索 `sys.account.captchaEnabled`
+4. 打开参数编辑页
+5. 将参数值改成 `true`
+6. 保存
+
+关闭步骤：
+
+1. 登录后台
+2. 进入 `系统管理 -> 参数设置`
+3. 搜索 `sys.account.captchaEnabled`
+4. 打开参数编辑页
+5. 将参数值改成 `false`
+6. 保存
+
+### 方式二：直接修改数据库
+
+开启验证码：
+
+```sql
+update sys_config
+set config_value = 'true'
+where config_key = 'sys.account.captchaEnabled';
+```
+
+关闭验证码：
+
+```sql
+update sys_config
+set config_value = 'false'
+where config_key = 'sys.account.captchaEnabled';
+```
+
+### 修改后如何生效
+
+项目会把系统参数缓存到 Redis。如果你已经改了数据库或后台参数，但页面还没变化，按下面顺序处理：
+
+1. 退出当前登录并重新登录
+2. 浏览器强制刷新页面：`Cmd + Shift + R`
+3. 重启后端：`./moco.sh restart`
+4. 如果还是没生效，删除 Redis 缓存键：`sys_config:sys.account.captchaEnabled`
+
+删除 Redis 缓存键示例：
+
+```bash
+docker exec moco-redis redis-cli DEL sys_config:sys.account.captchaEnabled
+```
+
+### 如何确认是否已生效
+
+调用验证码接口：
+
+```bash
+curl http://127.0.0.1:8080/captchaImage
+```
+
+返回结果中：
+
+- `captchaEnabled: true` 表示验证码已开启
+- `captchaEnabled: false` 表示验证码已关闭
+
 ## 当前定制内容
 
 相较于上游主线，当前仓库已经完成这些改造：
