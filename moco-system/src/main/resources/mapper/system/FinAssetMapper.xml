@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.FinAssetMapper">
+
+    <resultMap type="FinAsset" id="FinAssetResult">
+        <id property="assetId" column="asset_id"/>
+        <result property="marketId" column="market_id"/>
+        <result property="marketCode" column="market_code"/>
+        <result property="marketName" column="market_name"/>
+        <result property="assetCode" column="asset_code"/>
+        <result property="assetName" column="asset_name"/>
+        <result property="assetType" column="asset_type"/>
+        <result property="quoteCode" column="quote_code"/>
+        <result property="quoteEnabled" column="quote_enabled"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectAssetVo">
+        select a.asset_id, a.market_id, m.market_code, m.market_name, a.asset_code, a.asset_name,
+               a.asset_type, a.quote_code, a.quote_enabled, a.status, a.del_flag,
+               a.create_by, a.create_time, a.update_by, a.update_time, a.remark
+        from fin_asset a
+        left join fin_market m on m.market_id = a.market_id
+    </sql>
+
+    <select id="selectAssetList" parameterType="FinAsset" resultMap="FinAssetResult">
+        <include refid="selectAssetVo"/>
+        <where>
+            a.del_flag = '0'
+            <if test="marketId != null">and a.market_id = #{marketId}</if>
+            <if test="assetCode != null and assetCode != ''">and a.asset_code like concat('%', #{assetCode}, '%')</if>
+            <if test="assetName != null and assetName != ''">and a.asset_name like concat('%', #{assetName}, '%')</if>
+            <if test="assetType != null and assetType != ''">and a.asset_type = #{assetType}</if>
+            <if test="quoteEnabled != null and quoteEnabled != ''">and a.quote_enabled = #{quoteEnabled}</if>
+            <if test="status != null and status != ''">and a.status = #{status}</if>
+        </where>
+        order by a.asset_id desc
+    </select>
+
+    <select id="selectAssetOptions" resultMap="FinAssetResult">
+        <include refid="selectAssetVo"/>
+        where a.del_flag = '0' and a.status = '0'
+        order by a.asset_name asc
+    </select>
+
+    <select id="selectQuoteEnabledAssets" resultMap="FinAssetResult">
+        <include refid="selectAssetVo"/>
+        where a.del_flag = '0' and a.status = '0' and a.quote_enabled = '1'
+        order by a.asset_id asc
+    </select>
+
+    <select id="selectAssetById" parameterType="Long" resultMap="FinAssetResult">
+        <include refid="selectAssetVo"/>
+        where a.asset_id = #{assetId}
+    </select>
+
+    <select id="checkAssetUnique" parameterType="FinAsset" resultMap="FinAssetResult">
+        <include refid="selectAssetVo"/>
+        where a.market_id = #{marketId} and a.asset_code = #{assetCode} and a.del_flag = '0'
+        limit 1
+    </select>
+
+    <insert id="insertAsset" parameterType="FinAsset" useGeneratedKeys="true" keyProperty="assetId">
+        insert into fin_asset(
+            market_id, asset_code, asset_name, asset_type, quote_code, quote_enabled, status, remark, create_by, create_time
+        ) values (
+            #{marketId}, #{assetCode}, #{assetName}, #{assetType}, #{quoteCode}, #{quoteEnabled}, #{status}, #{remark}, #{createBy}, sysdate()
+        )
+    </insert>
+
+    <update id="updateAsset" parameterType="FinAsset">
+        update fin_asset
+        <set>
+            market_id = #{marketId},
+            asset_code = #{assetCode},
+            asset_name = #{assetName},
+            asset_type = #{assetType},
+            quote_code = #{quoteCode},
+            quote_enabled = #{quoteEnabled},
+            status = #{status},
+            remark = #{remark},
+            update_by = #{updateBy},
+            update_time = sysdate()
+        </set>
+        where asset_id = #{assetId}
+    </update>
+
+    <update id="deleteAssetByIds" parameterType="Long">
+        update fin_asset set del_flag = '2', update_time = sysdate()
+        where asset_id in
+        <foreach collection="array" item="assetId" open="(" separator="," close=")">
+            #{assetId}
+        </foreach>
+    </update>
+
+</mapper>

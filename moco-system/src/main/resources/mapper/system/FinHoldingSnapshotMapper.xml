@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.FinHoldingSnapshotMapper">
+
+    <resultMap type="FinHoldingSnapshot" id="FinHoldingSnapshotResult">
+        <id property="snapshotId" column="snapshot_id"/>
+        <result property="familyId" column="family_id"/>
+        <result property="familyName" column="family_name"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberName" column="member_name"/>
+        <result property="accountId" column="account_id"/>
+        <result property="accountName" column="account_name"/>
+        <result property="assetId" column="asset_id"/>
+        <result property="assetName" column="asset_name"/>
+        <result property="snapshotDate" column="snapshot_date"/>
+        <result property="quoteTime" column="quote_time"/>
+        <result property="holdingQty" column="holding_qty"/>
+        <result property="costAmount" column="cost_amount"/>
+        <result property="marketValue" column="market_value"/>
+        <result property="floatingProfitAmount" column="floating_profit_amount"/>
+        <result property="realizedProfitAmount" column="realized_profit_amount"/>
+        <result property="profitAmount" column="profit_amount"/>
+        <result property="profitRate" column="profit_rate"/>
+        <result property="positionRatio" column="position_ratio"/>
+    </resultMap>
+
+    <insert id="insertHoldingSnapshot" parameterType="FinHoldingSnapshot" useGeneratedKeys="true" keyProperty="snapshotId">
+        insert into fin_holding_snapshot(
+            family_id, member_id, account_id, asset_id, snapshot_date, quote_time, holding_qty, cost_amount,
+            market_value, floating_profit_amount, realized_profit_amount, profit_amount, profit_rate, position_ratio, create_time
+        ) values (
+            #{familyId}, #{memberId}, #{accountId}, #{assetId}, #{snapshotDate}, #{quoteTime}, #{holdingQty}, #{costAmount},
+            #{marketValue}, #{floatingProfitAmount}, #{realizedProfitAmount}, #{profitAmount}, #{profitRate}, #{positionRatio}, sysdate()
+        )
+    </insert>
+
+    <select id="selectLatestHoldingSnapshots" resultMap="FinHoldingSnapshotResult">
+        select s.snapshot_id, s.family_id, f.family_name, s.member_id, m.member_name, s.account_id, a.account_name,
+               s.asset_id, t.asset_name, s.snapshot_date, s.quote_time, s.holding_qty, s.cost_amount, s.market_value,
+               s.floating_profit_amount, s.realized_profit_amount, s.profit_amount, s.profit_rate, s.position_ratio
+        from fin_holding_snapshot s
+        left join fin_family f on f.family_id = s.family_id
+        left join fin_member_account m on m.member_id = s.member_id
+        left join fin_holding_account a on a.account_id = s.account_id
+        left join fin_asset t on t.asset_id = s.asset_id
+        inner join (
+            select family_id, member_id, account_id, asset_id, max(quote_time) as max_quote_time
+            from fin_holding_snapshot
+            group by family_id, member_id, account_id, asset_id
+        ) x on x.family_id = s.family_id and x.member_id = s.member_id and x.account_id = s.account_id
+           and x.asset_id = s.asset_id and x.max_quote_time = s.quote_time
+        <where>
+            1 = 1
+            <if test="familyId != null">and s.family_id = #{familyId}</if>
+            <if test="memberId != null">and s.member_id = #{memberId}</if>
+            <if test="accountId != null">and s.account_id = #{accountId}</if>
+        </where>
+        order by s.quote_time desc
+    </select>
+
+</mapper>

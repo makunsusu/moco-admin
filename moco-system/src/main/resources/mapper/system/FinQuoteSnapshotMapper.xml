@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.FinQuoteSnapshotMapper">
+
+    <resultMap type="FinQuoteSnapshot" id="FinQuoteSnapshotResult">
+        <id property="quoteId" column="quote_id"/>
+        <result property="assetId" column="asset_id"/>
+        <result property="assetCode" column="asset_code"/>
+        <result property="assetName" column="asset_name"/>
+        <result property="snapshotDate" column="snapshot_date"/>
+        <result property="quoteTime" column="quote_time"/>
+        <result property="providerCode" column="provider_code"/>
+        <result property="lastPrice" column="last_price"/>
+        <result property="openPrice" column="open_price"/>
+        <result property="prevClosePrice" column="prev_close_price"/>
+        <result property="changeAmount" column="change_amount"/>
+        <result property="changeRate" column="change_rate"/>
+        <result property="rawPayload" column="raw_payload"/>
+    </resultMap>
+
+    <insert id="insertQuoteSnapshot" parameterType="FinQuoteSnapshot" useGeneratedKeys="true" keyProperty="quoteId">
+        insert into fin_quote_snapshot(
+            asset_id, snapshot_date, quote_time, provider_code, last_price, open_price,
+            prev_close_price, change_amount, change_rate, raw_payload, create_time
+        ) values (
+            #{assetId}, #{snapshotDate}, #{quoteTime}, #{providerCode}, #{lastPrice}, #{openPrice},
+            #{prevClosePrice}, #{changeAmount}, #{changeRate}, #{rawPayload}, sysdate()
+        )
+    </insert>
+
+    <select id="selectLatestQuotes" resultMap="FinQuoteSnapshotResult">
+        select q.quote_id, q.asset_id, a.asset_code, a.asset_name, q.snapshot_date, q.quote_time, q.provider_code,
+               q.last_price, q.open_price, q.prev_close_price, q.change_amount, q.change_rate, q.raw_payload
+        from fin_quote_snapshot q
+        inner join (
+            select asset_id, max(quote_time) as max_quote_time
+            from fin_quote_snapshot
+            group by asset_id
+        ) x on x.asset_id = q.asset_id and x.max_quote_time = q.quote_time
+        left join fin_asset a on a.asset_id = q.asset_id
+        order by q.quote_time desc
+    </select>
+
+    <select id="selectLatestQuoteByAssetId" parameterType="Long" resultMap="FinQuoteSnapshotResult">
+        select q.quote_id, q.asset_id, a.asset_code, a.asset_name, q.snapshot_date, q.quote_time, q.provider_code,
+               q.last_price, q.open_price, q.prev_close_price, q.change_amount, q.change_rate, q.raw_payload
+        from fin_quote_snapshot q
+        left join fin_asset a on a.asset_id = q.asset_id
+        where q.asset_id = #{assetId}
+        order by q.quote_time desc
+        limit 1
+    </select>
+
+    <select id="selectMaxLastPriceByAssetId" parameterType="Long" resultType="java.math.BigDecimal">
+        select max(last_price) from fin_quote_snapshot where asset_id = #{assetId}
+    </select>
+
+</mapper>

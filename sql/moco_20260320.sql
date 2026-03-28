@@ -185,8 +185,13 @@ insert into sys_menu values('114',  '缓存列表', '2',   '6', 'cacheList',  'm
 insert into sys_menu values('115',  '表单构建', '3',   '1', 'build',      'tool/build/index',         '', '', 1, 0, 'C', '0', '0', 'tool:build:list',         'build',         'admin', sysdate(), '', null, '表单构建菜单');
 insert into sys_menu values('116',  '代码生成', '3',   '2', 'gen',        'tool/gen/index',           '', '', 1, 0, 'C', '0', '0', 'tool:gen:list',           'code',          'admin', sysdate(), '', null, '代码生成菜单');
 insert into sys_menu values('117',  '系统接口', '3',   '3', 'swagger',    'tool/swagger/index',       '', '', 1, 0, 'C', '0', '0', 'tool:swagger:list',       'swagger',       'admin', sysdate(), '', null, '系统接口菜单');
-insert into sys_menu values('2000', '理财大师', '0',   '5', 'finance',    null,                       '', '', 1, 0, 'M', '0', '0', '',                        'money',         'admin', sysdate(), '', null, '理财大师目录');
-insert into sys_menu values('2001', '交易市场管理', '2000', '1', 'market', 'finance/market/index',   '', '', 1, 0, 'C', '0', '0', 'finance:market:list',     'chart',         'admin', sysdate(), '', null, '交易市场管理菜单');
+insert into sys_menu values('2000', '理财大师', '0',   '5', 'finance',      null,                         '', '', 1, 0, 'M', '0', '0', '',                           'money',     'admin', sysdate(), '', null, '理财大师目录');
+insert into sys_menu values('2001', '家庭总览', '2000', '1', 'overview',    'finance/overview/index',   '', '', 1, 0, 'C', '0', '0', 'finance:family:list',       'dashboard', 'admin', sysdate(), '', null, '家庭总览菜单');
+insert into sys_menu values('2002', '家庭账户', '2000', '2', 'account',     'finance/account/index',    '', '', 1, 0, 'C', '0', '0', 'finance:account:list',      'peoples',   'admin', sysdate(), '', null, '家庭账户菜单');
+insert into sys_menu values('2003', '资产与行情', '2000', '3', 'asset',       'finance/asset/index',      '', '', 1, 0, 'C', '0', '0', 'finance:asset:list',        'chart',     'admin', sysdate(), '', null, '资产与行情菜单');
+insert into sys_menu values('2004', '交易流水', '2000', '4', 'transaction', 'finance/transaction/index','', '', 1, 0, 'C', '0', '0', 'finance:transaction:list',  'date',      'admin', sysdate(), '', null, '交易流水菜单');
+insert into sys_menu values('2005', '提醒中心', '2000', '5', 'alert',       'finance/alert/index',      '', '', 1, 0, 'C', '0', '0', 'finance:alert:list',        'bell',      'admin', sysdate(), '', null, '提醒中心菜单');
+insert into sys_menu values('2006', '交易市场', '2000', '6', 'market',      'finance/market/index',     '', '', 1, 0, 'C', '0', '0', 'finance:market:list',       'money',     'admin', sysdate(), '', null, '交易市场菜单');
 -- 三级菜单
 insert into sys_menu values('500',  '操作日志', '108', '1', 'operlog',    'monitor/operlog/index',    '', '', 1, 0, 'C', '0', '0', 'monitor:operlog:list',    'form',          'admin', sysdate(), '', null, '操作日志菜单');
 insert into sys_menu values('501',  '登录日志', '108', '2', 'logininfor', 'monitor/logininfor/index', '', '', 1, 0, 'C', '0', '0', 'monitor:logininfor:list', 'logininfor',    'admin', sysdate(), '', null, '登录日志菜单');
@@ -264,11 +269,34 @@ insert into sys_menu values('1057', '生成删除', '116', '3', '#', '', '', '',
 insert into sys_menu values('1058', '导入代码', '116', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'tool:gen:import',            '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1059', '预览代码', '116', '5', '#', '', '', '', 1, 0, 'F', '0', '0', 'tool:gen:preview',           '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1060', '生成代码', '116', '6', '#', '', '', '', 1, 0, 'F', '0', '0', 'tool:gen:code',              '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2002', '市场查询', '2001', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:query',      '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2003', '市场新增', '2001', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:add',        '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2004', '市场修改', '2001', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:edit',       '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2005', '市场删除', '2001', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:remove',     '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2006', '市场导出', '2001', '5', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:export',     '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2010', '家庭查询', '2001', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:family:query', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2011', '家庭新增', '2001', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:family:add',   '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2012', '家庭修改', '2001', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:family:edit',  '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2013', '家庭删除', '2001', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:family:remove','#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2014', '账户查询', '2002', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:account:query','#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2015', '账户新增', '2002', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:account:add',  '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2016', '账户修改', '2002', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:account:edit', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2017', '账户删除', '2002', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:account:remove','#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2018', '资产查询', '2003', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:asset:query',  '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2019', '资产新增', '2003', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:asset:add',    '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2020', '资产修改', '2003', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:asset:edit',   '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2021', '资产删除', '2003', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:asset:remove', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2022', '行情刷新', '2003', '5', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:quote:refresh','#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2023', '行情查询', '2003', '6', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:quote:query',  '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2024', '交易查询', '2004', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:transaction:query', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2025', '交易新增', '2004', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:transaction:add',   '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2026', '交易修改', '2004', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:transaction:edit',  '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2027', '交易删除', '2004', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:transaction:remove','#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2028', '交易导出', '2004', '5', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:transaction:export','#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2029', '提醒查询', '2005', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:alert:query', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2030', '提醒新增', '2005', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:alert:add',   '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2031', '提醒修改', '2005', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:alert:edit',  '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2032', '提醒删除', '2005', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:alert:remove','#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2033', '市场查询', '2006', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:query', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2034', '市场新增', '2006', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:add',   '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2035', '市场修改', '2006', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:edit',  '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2036', '市场删除', '2006', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:remove','#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2037', '市场导出', '2006', '5', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:export','#', 'admin', sysdate(), '', null, '');
 
 
 -- ----------------------------
@@ -393,6 +421,26 @@ insert into sys_role_menu values ('2', '2003');
 insert into sys_role_menu values ('2', '2004');
 insert into sys_role_menu values ('2', '2005');
 insert into sys_role_menu values ('2', '2006');
+insert into sys_role_menu values ('2', '2010');
+insert into sys_role_menu values ('2', '2011');
+insert into sys_role_menu values ('2', '2012');
+insert into sys_role_menu values ('2', '2013');
+insert into sys_role_menu values ('2', '2014');
+insert into sys_role_menu values ('2', '2015');
+insert into sys_role_menu values ('2', '2020');
+insert into sys_role_menu values ('2', '2021');
+insert into sys_role_menu values ('2', '2022');
+insert into sys_role_menu values ('2', '2023');
+insert into sys_role_menu values ('2', '2024');
+insert into sys_role_menu values ('2', '2025');
+insert into sys_role_menu values ('2', '2030');
+insert into sys_role_menu values ('2', '2031');
+insert into sys_role_menu values ('2', '2032');
+insert into sys_role_menu values ('2', '2033');
+insert into sys_role_menu values ('2', '2034');
+insert into sys_role_menu values ('2', '2035');
+insert into sys_role_menu values ('2', '2036');
+insert into sys_role_menu values ('2', '2037');
 
 -- ----------------------------
 -- 8、角色和部门关联表  角色1-N部门
@@ -701,9 +749,259 @@ insert into fin_market values (8, 'INE',  '上海国际能源交易中心', '上
 insert into fin_market values (9, 'GFEX', '广州期货交易所',       '广期所',   '期货交易所', '中国大陆', 'http://www.gfex.com.cn',   9, '0', 'admin', sysdate(), '', null, '绿色与创新型期货市场');
 insert into fin_market values (10,'HKEX', '香港交易及结算所有限公司', '港交所', '综合交易所', '中国香港', 'https://www.hkex.com.hk', 10, '0', 'admin', sysdate(), '', null, '香港资本市场核心交易所');
 
+-- ----------------------------
+-- 19、家庭资产表
+-- ----------------------------
+drop table if exists fin_family;
+create table fin_family (
+  family_id         bigint(20)      not null auto_increment    comment '家庭ID',
+  family_code       varchar(32)     not null                   comment '家庭编码',
+  family_name       varchar(100)    not null                   comment '家庭名称',
+  owner_name        varchar(50)     default ''                 comment '家庭负责人',
+  family_sort       int(4)          default 0                  comment '显示顺序',
+  status            char(1)         default '0'                comment '状态（0正常 1停用）',
+  del_flag          char(1)         default '0'                comment '删除标志（0存在 2删除）',
+  create_by         varchar(64)     default ''                 comment '创建者',
+  create_time       datetime                                   comment '创建时间',
+  update_by         varchar(64)     default ''                 comment '更新者',
+  update_time       datetime                                   comment '更新时间',
+  remark            varchar(500)    default null               comment '备注',
+  primary key (family_id),
+  unique key uk_fin_family_code (family_code)
+) engine=innodb auto_increment=1 comment = '家庭资产表';
+
+insert into fin_family values (1, 'MAKUN_HOME', '木坤家庭', '木坤', 1, '0', '0', 'admin', sysdate(), '', null, '家庭资产总账');
 
 -- ----------------------------
--- 19、公告已读记录表
+-- 20、家庭成员账户表
+-- ----------------------------
+drop table if exists fin_member_account;
+create table fin_member_account (
+  member_id         bigint(20)      not null auto_increment    comment '成员ID',
+  family_id         bigint(20)      not null                   comment '家庭ID',
+  member_name       varchar(50)     not null                   comment '成员名称',
+  member_role       varchar(30)     default ''                 comment '成员角色',
+  risk_level        varchar(30)     default ''                 comment '风险偏好',
+  contact_phone     varchar(20)     default ''                 comment '联系电话',
+  member_sort       int(4)          default 0                  comment '显示顺序',
+  status            char(1)         default '0'                comment '状态（0正常 1停用）',
+  del_flag          char(1)         default '0'                comment '删除标志（0存在 2删除）',
+  create_by         varchar(64)     default ''                 comment '创建者',
+  create_time       datetime                                   comment '创建时间',
+  update_by         varchar(64)     default ''                 comment '更新者',
+  update_time       datetime                                   comment '更新时间',
+  remark            varchar(500)    default null               comment '备注',
+  primary key (member_id),
+  key idx_fin_member_family (family_id)
+) engine=innodb auto_increment=1 comment = '家庭成员账户表';
+
+insert into fin_member_account values (1, 1, '木坤', '家庭负责人', '稳健成长', '13800000001', 1, '0', '0', 'admin', sysdate(), '', null, '主要负责股票账户');
+insert into fin_member_account values (2, 1, '家人A', '共同账户', '稳健', '13800000002', 2, '0', '0', 'admin', sysdate(), '', null, '主要负责基金定投');
+
+-- ----------------------------
+-- 21、持仓账户表
+-- ----------------------------
+drop table if exists fin_holding_account;
+create table fin_holding_account (
+  account_id        bigint(20)      not null auto_increment    comment '账户ID',
+  family_id         bigint(20)      not null                   comment '家庭ID',
+  member_id         bigint(20)      not null                   comment '成员ID',
+  account_name      varchar(100)    not null                   comment '账户名称',
+  account_type      varchar(30)     default ''                 comment '账户类型',
+  broker_name       varchar(100)    default ''                 comment '所属平台',
+  cash_balance      decimal(16,2)   default 0.00               comment '现金余额',
+  account_sort      int(4)          default 0                  comment '显示顺序',
+  status            char(1)         default '0'                comment '状态（0正常 1停用）',
+  del_flag          char(1)         default '0'                comment '删除标志（0存在 2删除）',
+  create_by         varchar(64)     default ''                 comment '创建者',
+  create_time       datetime                                   comment '创建时间',
+  update_by         varchar(64)     default ''                 comment '更新者',
+  update_time       datetime                                   comment '更新时间',
+  remark            varchar(500)    default null               comment '备注',
+  primary key (account_id),
+  key idx_fin_account_family_member (family_id, member_id)
+) engine=innodb auto_increment=1 comment = '持仓账户表';
+
+insert into fin_holding_account values (1, 1, 1, '招商证券A股账户', 'STOCK', '招商证券', 28000.00, 1, '0', '0', 'admin', sysdate(), '', null, '股票主账户');
+insert into fin_holding_account values (2, 1, 2, '支付宝基金账户', 'FUND', '支付宝', 12000.00, 2, '0', '0', 'admin', sysdate(), '', null, '基金定投账户');
+
+-- ----------------------------
+-- 22、资产标的表
+-- ----------------------------
+drop table if exists fin_asset;
+create table fin_asset (
+  asset_id          bigint(20)      not null auto_increment    comment '资产ID',
+  market_id         bigint(20)      not null                   comment '市场ID',
+  asset_code        varchar(32)     not null                   comment '资产代码',
+  asset_name        varchar(100)    not null                   comment '资产名称',
+  asset_type        varchar(20)     not null                   comment '资产类型（STOCK/FUND）',
+  quote_code        varchar(32)     default ''                 comment '行情代码',
+  quote_enabled     char(1)         default '1'                comment '是否启用行情（1是 0否）',
+  status            char(1)         default '0'                comment '状态（0正常 1停用）',
+  del_flag          char(1)         default '0'                comment '删除标志（0存在 2删除）',
+  create_by         varchar(64)     default ''                 comment '创建者',
+  create_time       datetime                                   comment '创建时间',
+  update_by         varchar(64)     default ''                 comment '更新者',
+  update_time       datetime                                   comment '更新时间',
+  remark            varchar(500)    default null               comment '备注',
+  primary key (asset_id),
+  unique key uk_fin_asset_market_code (market_id, asset_code)
+) engine=innodb auto_increment=1 comment = '资产标的表';
+
+insert into fin_asset values (1, 1, '600519', '贵州茅台', 'STOCK', '600519', '1', '0', '0', 'admin', sysdate(), '', null, '白酒核心仓位');
+insert into fin_asset values (2, 2, '159915', '创业板ETF', 'FUND', '159915', '1', '0', '0', 'admin', sysdate(), '', null, '指数增强配置');
+insert into fin_asset values (3, 2, '012348', '中欧时代先锋混合', 'FUND', '012348', '1', '0', '0', 'admin', sysdate(), '', null, '主动权益基金');
+
+-- ----------------------------
+-- 23、交易流水表
+-- ----------------------------
+drop table if exists fin_transaction;
+create table fin_transaction (
+  transaction_id    bigint(20)      not null auto_increment    comment '流水ID',
+  family_id         bigint(20)      not null                   comment '家庭ID',
+  member_id         bigint(20)      not null                   comment '成员ID',
+  account_id        bigint(20)      not null                   comment '账户ID',
+  asset_id          bigint(20)      not null                   comment '资产ID',
+  transaction_type  varchar(30)     not null                   comment '交易类型',
+  trade_date        datetime        not null                   comment '交易时间',
+  quantity          decimal(18,4)   not null                   comment '数量/份额',
+  price             decimal(16,4)   default 0.0000             comment '单价',
+  fee               decimal(16,2)   default 0.00               comment '手续费',
+  amount            decimal(16,2)   default 0.00               comment '成交金额',
+  del_flag          char(1)         default '0'                comment '删除标志（0存在 2删除）',
+  create_by         varchar(64)     default ''                 comment '创建者',
+  create_time       datetime                                   comment '创建时间',
+  update_by         varchar(64)     default ''                 comment '更新者',
+  update_time       datetime                                   comment '更新时间',
+  remark            varchar(500)    default null               comment '备注',
+  primary key (transaction_id),
+  key idx_fin_transaction_scope (family_id, member_id, account_id, asset_id),
+  key idx_fin_transaction_trade_date (trade_date)
+) engine=innodb auto_increment=1 comment = '交易流水表';
+
+insert into fin_transaction values (1, 1, 1, 1, 1, 'BUY',        '2026-01-08 10:00:00', 10.0000, 1520.0000, 5.00, 15200.00, '0', 'admin', sysdate(), '', null, '开年建仓');
+insert into fin_transaction values (2, 1, 1, 1, 1, 'BUY',        '2026-02-06 10:30:00', 5.0000, 1588.0000, 5.00, 7940.00,  '0', 'admin', sysdate(), '', null, '回调加仓');
+insert into fin_transaction values (3, 1, 1, 1, 1, 'SELL',       '2026-03-15 09:45:00', 2.0000, 1685.0000, 5.00, 3370.00,  '0', 'admin', sysdate(), '', null, '兑现部分收益');
+insert into fin_transaction values (4, 1, 2, 2, 2, 'BUY',        '2026-01-10 15:00:00', 500.0000, 2.0860, 0.00, 1043.00,  '0', 'admin', sysdate(), '', null, '指数基金定投');
+insert into fin_transaction values (5, 1, 2, 2, 2, 'BUY',        '2026-02-10 15:00:00', 600.0000, 2.1330, 0.00, 1279.80,  '0', 'admin', sysdate(), '', null, '指数基金加仓');
+insert into fin_transaction values (6, 1, 2, 2, 3, 'BUY',        '2026-01-18 15:00:00', 1200.0000, 1.0260, 0.00, 1231.20, '0', 'admin', sysdate(), '', null, '主动基金建仓');
+insert into fin_transaction values (7, 1, 2, 2, 3, 'DIVIDEND',   '2026-03-01 09:00:00', 30.0000, 0.0000, 0.00, 30.00,    '0', 'admin', sysdate(), '', null, '基金分红再投资');
+insert into fin_transaction values (8, 1, 1, 1, 1, 'TRANSFER_IN','2026-03-20 09:00:00', 1.0000, 0.0000, 0.00, 0.00,      '0', 'admin', sysdate(), '', null, '家人账户转入体验单');
+
+-- ----------------------------
+-- 24、行情快照表
+-- ----------------------------
+drop table if exists fin_quote_snapshot;
+create table fin_quote_snapshot (
+  quote_id          bigint(20)      not null auto_increment    comment '行情快照ID',
+  asset_id          bigint(20)      not null                   comment '资产ID',
+  asset_code        varchar(32)     not null                   comment '资产代码',
+  asset_name        varchar(100)    not null                   comment '资产名称',
+  snapshot_date     date            not null                   comment '快照日期',
+  quote_time        datetime        not null                   comment '行情时间',
+  provider_code     varchar(32)     default ''                 comment '行情源编码',
+  last_price        decimal(16,4)   default 0.0000             comment '最新价',
+  open_price        decimal(16,4)   default 0.0000             comment '开盘价',
+  prev_close_price  decimal(16,4)   default 0.0000             comment '昨收价',
+  change_amount     decimal(16,4)   default 0.0000             comment '涨跌额',
+  change_rate       decimal(16,4)   default 0.0000             comment '涨跌幅',
+  raw_payload       text                                       comment '原始响应',
+  create_time       datetime                                   comment '创建时间',
+  primary key (quote_id),
+  key idx_fin_quote_asset_time (asset_id, quote_time)
+) engine=innodb auto_increment=1 comment = '行情快照表';
+
+insert into fin_quote_snapshot values (1, 1, '600519', '贵州茅台', '2026-03-28', '2026-03-28 15:00:00', 'eastmoney', 1712.6000, 1705.0000, 1698.1000, 14.5000, 0.0085, '{"mock":true}', sysdate());
+insert into fin_quote_snapshot values (2, 2, '159915', '创业板ETF', '2026-03-28', '2026-03-28 15:00:00', 'eastmoney', 2.2410, 2.2200, 2.2150, 0.0260, 0.0117, '{"mock":true}', sysdate());
+insert into fin_quote_snapshot values (3, 3, '012348', '中欧时代先锋混合', '2026-03-28', '2026-03-28 15:00:00', 'eastmoney', 1.0840, 1.0700, 1.0720, 0.0120, 0.0112, '{"mock":true}', sysdate());
+
+-- ----------------------------
+-- 25、持仓快照表
+-- ----------------------------
+drop table if exists fin_holding_snapshot;
+create table fin_holding_snapshot (
+  snapshot_id             bigint(20)      not null auto_increment    comment '持仓快照ID',
+  family_id               bigint(20)      not null                   comment '家庭ID',
+  member_id               bigint(20)      not null                   comment '成员ID',
+  account_id              bigint(20)      not null                   comment '账户ID',
+  asset_id                bigint(20)      not null                   comment '资产ID',
+  snapshot_date           date            not null                   comment '快照日期',
+  quote_time              datetime        not null                   comment '行情时间',
+  holding_qty             decimal(18,4)   default 0.0000             comment '持仓数量',
+  cost_amount             decimal(16,2)   default 0.00               comment '持仓成本',
+  market_value            decimal(16,2)   default 0.00               comment '持仓市值',
+  floating_profit_amount  decimal(16,2)   default 0.00               comment '浮动收益',
+  realized_profit_amount  decimal(16,2)   default 0.00               comment '已实现收益',
+  profit_amount           decimal(16,2)   default 0.00               comment '累计收益',
+  profit_rate             decimal(16,4)   default 0.0000             comment '收益率',
+  position_ratio          decimal(16,4)   default 0.0000             comment '仓位占比',
+  create_time             datetime                                   comment '创建时间',
+  primary key (snapshot_id),
+  key idx_fin_holding_asset_time (asset_id, quote_time)
+) engine=innodb auto_increment=1 comment = '持仓快照表';
+
+insert into fin_holding_snapshot values (1, 1, 1, 1, 1, '2026-03-28', '2026-03-28 15:00:00', 14.0000, 21795.00, 23976.40, 2181.40, 320.00, 2501.40, 0.1148, 0.7474, sysdate());
+insert into fin_holding_snapshot values (2, 1, 2, 2, 2, '2026-03-28', '2026-03-28 15:00:00', 1100.0000, 2322.80, 2465.10, 142.30, 0.00, 142.30, 0.0613, 0.0769, sysdate());
+insert into fin_holding_snapshot values (3, 1, 2, 2, 3, '2026-03-28', '2026-03-28 15:00:00', 1230.0000, 1231.20, 1333.32, 102.12, 30.00, 132.12, 0.1073, 0.0416, sysdate());
+
+-- ----------------------------
+-- 26、提醒规则表
+-- ----------------------------
+drop table if exists fin_alert_rule;
+create table fin_alert_rule (
+  rule_id                 bigint(20)      not null auto_increment    comment '规则ID',
+  family_id               bigint(20)      default null               comment '家庭ID',
+  member_id               bigint(20)      default null               comment '成员ID',
+  asset_id                bigint(20)      default null               comment '资产ID',
+  rule_name               varchar(100)    not null                   comment '规则名称',
+  rule_type               varchar(30)     not null                   comment '规则类型',
+  threshold_value         decimal(16,4)   default null               comment '阈值',
+  second_threshold_value  decimal(16,4)   default null               comment '第二阈值',
+  enabled                 char(1)         default '1'                comment '是否启用（1是 0否）',
+  suggestion_text         varchar(255)    default ''                 comment '建议动作',
+  last_triggered_time     datetime        default null               comment '上次触发时间',
+  del_flag                char(1)         default '0'                comment '删除标志（0存在 2删除）',
+  create_by               varchar(64)     default ''                 comment '创建者',
+  create_time             datetime                                   comment '创建时间',
+  update_by               varchar(64)     default ''                 comment '更新者',
+  update_time             datetime                                   comment '更新时间',
+  remark                  varchar(500)    default null               comment '备注',
+  primary key (rule_id),
+  key idx_fin_alert_rule_scope (family_id, member_id, asset_id)
+) engine=innodb auto_increment=1 comment = '提醒规则表';
+
+insert into fin_alert_rule values (1, 1, 1, 1, '茅台收益率目标提醒', 'TARGET_PROFIT_RATE', 0.1000, null, '1', '建议复核仓位，决定是否分批止盈。', null, '0', 'admin', sysdate(), '', null, '收益到达 10% 触发');
+insert into fin_alert_rule values (2, 1, 2, 2, '创业板ETF价格区间提醒', 'TARGET_PRICE_RANGE', 2.2000, 2.2800, '1', '建议结合定投节奏调整买入频率。', null, '0', 'admin', sysdate(), '', null, '进入目标区间时提醒');
+insert into fin_alert_rule values (3, 1, null, null, '家庭现金比例下限提醒', 'CASH_RATIO_LOW', 0.1500, null, '1', '建议保留必要现金缓冲，避免满仓。', null, '0', 'admin', sysdate(), '', null, '现金比例过低时提醒');
+
+-- ----------------------------
+-- 27、提醒事件表
+-- ----------------------------
+drop table if exists fin_alert_event;
+create table fin_alert_event (
+  event_id                 bigint(20)      not null auto_increment    comment '事件ID',
+  rule_id                  bigint(20)      not null                   comment '规则ID',
+  family_id                bigint(20)      default null               comment '家庭ID',
+  member_id                bigint(20)      default null               comment '成员ID',
+  asset_id                 bigint(20)      default null               comment '资产ID',
+  event_title              varchar(100)    not null                   comment '事件标题',
+  rule_type                varchar(30)     not null                   comment '规则类型',
+  trigger_value            decimal(16,4)   default null               comment '触发值',
+  threshold_value          decimal(16,4)   default null               comment '阈值',
+  second_threshold_value   decimal(16,4)   default null               comment '第二阈值',
+  trigger_time             datetime        not null                   comment '触发时间',
+  status                   char(1)         default '0'                comment '处理状态（0未处理 1已读 2忽略）',
+  suggestion_text          varchar(255)    default ''                 comment '建议动作',
+  detail_text              varchar(500)    default ''                 comment '详情说明',
+  create_time              datetime                                   comment '创建时间',
+  primary key (event_id),
+  key idx_fin_alert_event_rule_time (rule_id, trigger_time)
+) engine=innodb auto_increment=1 comment = '提醒事件表';
+
+insert into fin_alert_event values (1, 1, 1, 1, 1, '规则命中：茅台收益率目标提醒', 'TARGET_PROFIT_RATE', 0.1148, 0.1000, null, '2026-03-28 15:05:00', '0', '建议复核仓位，决定是否分批止盈。', '规则[茅台收益率目标提醒]已触发，当前值为0.1148，阈值为0.1', sysdate());
+
+-- ----------------------------
+-- 28、公告已读记录表
 -- ----------------------------
 drop table if exists sys_notice_read;
 create table sys_notice_read (
@@ -717,7 +1015,7 @@ create table sys_notice_read (
 
 
 -- ----------------------------
--- 20、代码生成业务表
+-- 29、代码生成业务表
 -- ----------------------------
 drop table if exists gen_table;
 create table gen_table (
@@ -747,7 +1045,7 @@ create table gen_table (
 
 
 -- ----------------------------
--- 21、代码生成业务表字段
+-- 30、代码生成业务表字段
 -- ----------------------------
 drop table if exists gen_table_column;
 create table gen_table_column (

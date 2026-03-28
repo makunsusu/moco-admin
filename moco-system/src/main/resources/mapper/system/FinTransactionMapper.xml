@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.FinTransactionMapper">
+
+    <resultMap type="FinTransaction" id="FinTransactionResult">
+        <id property="transactionId" column="transaction_id"/>
+        <result property="familyId" column="family_id"/>
+        <result property="familyName" column="family_name"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberName" column="member_name"/>
+        <result property="accountId" column="account_id"/>
+        <result property="accountName" column="account_name"/>
+        <result property="assetId" column="asset_id"/>
+        <result property="assetName" column="asset_name"/>
+        <result property="transactionType" column="transaction_type"/>
+        <result property="tradeDate" column="trade_date"/>
+        <result property="quantity" column="quantity"/>
+        <result property="price" column="price"/>
+        <result property="fee" column="fee"/>
+        <result property="amount" column="amount"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectTransactionVo">
+        select t.transaction_id, t.family_id, f.family_name, t.member_id, m.member_name,
+               t.account_id, a.account_name, t.asset_id, s.asset_name, t.transaction_type,
+               t.trade_date, t.quantity, t.price, t.fee, t.amount, t.del_flag,
+               t.create_by, t.create_time, t.update_by, t.update_time, t.remark
+        from fin_transaction t
+        left join fin_family f on f.family_id = t.family_id
+        left join fin_member_account m on m.member_id = t.member_id
+        left join fin_holding_account a on a.account_id = t.account_id
+        left join fin_asset s on s.asset_id = t.asset_id
+    </sql>
+
+    <select id="selectTransactionList" parameterType="FinTransaction" resultMap="FinTransactionResult">
+        <include refid="selectTransactionVo"/>
+        <where>
+            t.del_flag = '0'
+            <if test="familyId != null">and t.family_id = #{familyId}</if>
+            <if test="memberId != null">and t.member_id = #{memberId}</if>
+            <if test="accountId != null">and t.account_id = #{accountId}</if>
+            <if test="assetId != null">and t.asset_id = #{assetId}</if>
+            <if test="transactionType != null and transactionType != ''">and t.transaction_type = #{transactionType}</if>
+        </where>
+        order by t.trade_date desc, t.transaction_id desc
+    </select>
+
+    <select id="selectTransactionById" parameterType="Long" resultMap="FinTransactionResult">
+        <include refid="selectTransactionVo"/>
+        where t.transaction_id = #{transactionId}
+    </select>
+
+    <select id="selectTransactionsForCalc" parameterType="FinTransaction" resultMap="FinTransactionResult">
+        <include refid="selectTransactionVo"/>
+        <where>
+            t.del_flag = '0'
+            <if test="familyId != null">and t.family_id = #{familyId}</if>
+            <if test="memberId != null">and t.member_id = #{memberId}</if>
+            <if test="accountId != null">and t.account_id = #{accountId}</if>
+            <if test="assetId != null">and t.asset_id = #{assetId}</if>
+        </where>
+        order by t.trade_date asc, t.transaction_id asc
+    </select>
+
+    <insert id="insertTransaction" parameterType="FinTransaction" useGeneratedKeys="true" keyProperty="transactionId">
+        insert into fin_transaction(
+            family_id, member_id, account_id, asset_id, transaction_type, trade_date, quantity,
+            price, fee, amount, remark, create_by, create_time
+        ) values (
+            #{familyId}, #{memberId}, #{accountId}, #{assetId}, #{transactionType}, #{tradeDate}, #{quantity},
+            #{price}, #{fee}, #{amount}, #{remark}, #{createBy}, sysdate()
+        )
+    </insert>
+
+    <update id="updateTransaction" parameterType="FinTransaction">
+        update fin_transaction
+        <set>
+            family_id = #{familyId},
+            member_id = #{memberId},
+            account_id = #{accountId},
+            asset_id = #{assetId},
+            transaction_type = #{transactionType},
+            trade_date = #{tradeDate},
+            quantity = #{quantity},
+            price = #{price},
+            fee = #{fee},
+            amount = #{amount},
+            remark = #{remark},
+            update_by = #{updateBy},
+            update_time = sysdate()
+        </set>
+        where transaction_id = #{transactionId}
+    </update>
+
+    <update id="deleteTransactionByIds" parameterType="Long">
+        update fin_transaction set del_flag = '2', update_time = sysdate()
+        where transaction_id in
+        <foreach collection="array" item="transactionId" open="(" separator="," close=")">
+            #{transactionId}
+        </foreach>
+    </update>
+
+</mapper>

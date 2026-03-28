@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.FinFamilyMapper">
+
+    <resultMap type="FinFamily" id="FinFamilyResult">
+        <id property="familyId" column="family_id"/>
+        <result property="familyCode" column="family_code"/>
+        <result property="familyName" column="family_name"/>
+        <result property="ownerName" column="owner_name"/>
+        <result property="familySort" column="family_sort"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <resultMap type="FinMemberAccount" id="FinMemberAccountResult">
+        <id property="memberId" column="member_id"/>
+        <result property="familyId" column="family_id"/>
+        <result property="familyName" column="family_name"/>
+        <result property="memberName" column="member_name"/>
+        <result property="memberRole" column="member_role"/>
+        <result property="riskLevel" column="risk_level"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="memberSort" column="member_sort"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectFamilyVo">
+        select family_id, family_code, family_name, owner_name, family_sort, status, del_flag,
+               create_by, create_time, update_by, update_time, remark
+        from fin_family
+    </sql>
+
+    <sql id="selectMemberVo">
+        select m.member_id, m.family_id, f.family_name, m.member_name, m.member_role, m.risk_level,
+               m.contact_phone, m.member_sort, m.status, m.del_flag,
+               m.create_by, m.create_time, m.update_by, m.update_time, m.remark
+        from fin_member_account m
+        left join fin_family f on f.family_id = m.family_id
+    </sql>
+
+    <select id="selectFamilyList" parameterType="FinFamily" resultMap="FinFamilyResult">
+        <include refid="selectFamilyVo"/>
+        <where>
+            del_flag = '0'
+            <if test="familyCode != null and familyCode != ''">
+                and family_code like concat('%', #{familyCode}, '%')
+            </if>
+            <if test="familyName != null and familyName != ''">
+                and family_name like concat('%', #{familyName}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+        order by family_sort asc, family_id desc
+    </select>
+
+    <select id="selectFamilyOptions" resultMap="FinFamilyResult">
+        <include refid="selectFamilyVo"/>
+        where del_flag = '0' and status = '0'
+        order by family_sort asc, family_id asc
+    </select>
+
+    <select id="selectFamilyById" parameterType="Long" resultMap="FinFamilyResult">
+        <include refid="selectFamilyVo"/>
+        where family_id = #{familyId}
+    </select>
+
+    <select id="checkFamilyCodeUnique" parameterType="String" resultMap="FinFamilyResult">
+        <include refid="selectFamilyVo"/>
+        where family_code = #{familyCode} and del_flag = '0'
+        limit 1
+    </select>
+
+    <insert id="insertFamily" parameterType="FinFamily" useGeneratedKeys="true" keyProperty="familyId">
+        insert into fin_family(
+            family_code, family_name, owner_name, family_sort, status, remark, create_by, create_time
+        ) values (
+            #{familyCode}, #{familyName}, #{ownerName}, #{familySort}, #{status}, #{remark}, #{createBy}, sysdate()
+        )
+    </insert>
+
+    <update id="updateFamily" parameterType="FinFamily">
+        update fin_family
+        <set>
+            family_code = #{familyCode},
+            family_name = #{familyName},
+            owner_name = #{ownerName},
+            family_sort = #{familySort},
+            status = #{status},
+            remark = #{remark},
+            update_by = #{updateBy},
+            update_time = sysdate()
+        </set>
+        where family_id = #{familyId}
+    </update>
+
+    <update id="deleteFamilyByIds" parameterType="Long">
+        update fin_family set del_flag = '2', update_time = sysdate()
+        where family_id in
+        <foreach collection="array" item="familyId" open="(" separator="," close=")">
+            #{familyId}
+        </foreach>
+    </update>
+
+    <select id="selectMemberList" parameterType="FinMemberAccount" resultMap="FinMemberAccountResult">
+        <include refid="selectMemberVo"/>
+        <where>
+            m.del_flag = '0'
+            <if test="familyId != null">and m.family_id = #{familyId}</if>
+            <if test="memberName != null and memberName != ''">and m.member_name like concat('%', #{memberName}, '%')</if>
+            <if test="status != null and status != ''">and m.status = #{status}</if>
+        </where>
+        order by m.member_sort asc, m.member_id desc
+    </select>
+
+    <select id="selectMemberOptions" parameterType="Long" resultMap="FinMemberAccountResult">
+        <include refid="selectMemberVo"/>
+        where m.del_flag = '0' and m.status = '0' and m.family_id = #{familyId}
+        order by m.member_sort asc, m.member_id asc
+    </select>
+
+    <select id="selectMemberById" parameterType="Long" resultMap="FinMemberAccountResult">
+        <include refid="selectMemberVo"/>
+        where m.member_id = #{memberId}
+    </select>
+
+    <insert id="insertMember" parameterType="FinMemberAccount" useGeneratedKeys="true" keyProperty="memberId">
+        insert into fin_member_account(
+            family_id, member_name, member_role, risk_level, contact_phone, member_sort, status, remark, create_by, create_time
+        ) values (
+            #{familyId}, #{memberName}, #{memberRole}, #{riskLevel}, #{contactPhone}, #{memberSort}, #{status}, #{remark}, #{createBy}, sysdate()
+        )
+    </insert>
+
+    <update id="updateMember" parameterType="FinMemberAccount">
+        update fin_member_account
+        <set>
+            family_id = #{familyId},
+            member_name = #{memberName},
+            member_role = #{memberRole},
+            risk_level = #{riskLevel},
+            contact_phone = #{contactPhone},
+            member_sort = #{memberSort},
+            status = #{status},
+            remark = #{remark},
+            update_by = #{updateBy},
+            update_time = sysdate()
+        </set>
+        where member_id = #{memberId}
+    </update>
+
+    <update id="deleteMemberByIds" parameterType="Long">
+        update fin_member_account set del_flag = '2', update_time = sysdate()
+        where member_id in
+        <foreach collection="array" item="memberId" open="(" separator="," close=")">
+            #{memberId}
+        </foreach>
+    </update>
+
+</mapper>

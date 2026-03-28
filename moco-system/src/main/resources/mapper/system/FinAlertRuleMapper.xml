@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.FinAlertRuleMapper">
+
+    <resultMap type="FinAlertRule" id="FinAlertRuleResult">
+        <id property="ruleId" column="rule_id"/>
+        <result property="familyId" column="family_id"/>
+        <result property="familyName" column="family_name"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberName" column="member_name"/>
+        <result property="assetId" column="asset_id"/>
+        <result property="assetName" column="asset_name"/>
+        <result property="ruleName" column="rule_name"/>
+        <result property="ruleType" column="rule_type"/>
+        <result property="thresholdValue" column="threshold_value"/>
+        <result property="secondThresholdValue" column="second_threshold_value"/>
+        <result property="enabled" column="enabled"/>
+        <result property="suggestionText" column="suggestion_text"/>
+        <result property="lastTriggeredTime" column="last_triggered_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectRuleVo">
+        select r.rule_id, r.family_id, f.family_name, r.member_id, m.member_name, r.asset_id, a.asset_name,
+               r.rule_name, r.rule_type, r.threshold_value, r.second_threshold_value, r.enabled, r.suggestion_text,
+               r.last_triggered_time, r.del_flag, r.create_by, r.create_time, r.update_by, r.update_time, r.remark
+        from fin_alert_rule r
+        left join fin_family f on f.family_id = r.family_id
+        left join fin_member_account m on m.member_id = r.member_id
+        left join fin_asset a on a.asset_id = r.asset_id
+    </sql>
+
+    <select id="selectAlertRuleList" parameterType="FinAlertRule" resultMap="FinAlertRuleResult">
+        <include refid="selectRuleVo"/>
+        <where>
+            r.del_flag = '0'
+            <if test="familyId != null">and r.family_id = #{familyId}</if>
+            <if test="memberId != null">and r.member_id = #{memberId}</if>
+            <if test="assetId != null">and r.asset_id = #{assetId}</if>
+            <if test="ruleName != null and ruleName != ''">and r.rule_name like concat('%', #{ruleName}, '%')</if>
+            <if test="ruleType != null and ruleType != ''">and r.rule_type = #{ruleType}</if>
+            <if test="enabled != null and enabled != ''">and r.enabled = #{enabled}</if>
+        </where>
+        order by r.rule_id desc
+    </select>
+
+    <select id="selectEnabledAlertRules" resultMap="FinAlertRuleResult">
+        <include refid="selectRuleVo"/>
+        where r.del_flag = '0' and r.enabled = '1'
+        order by r.rule_id asc
+    </select>
+
+    <select id="selectAlertRuleById" parameterType="Long" resultMap="FinAlertRuleResult">
+        <include refid="selectRuleVo"/>
+        where r.rule_id = #{ruleId}
+    </select>
+
+    <insert id="insertAlertRule" parameterType="FinAlertRule" useGeneratedKeys="true" keyProperty="ruleId">
+        insert into fin_alert_rule(
+            family_id, member_id, asset_id, rule_name, rule_type, threshold_value, second_threshold_value,
+            enabled, suggestion_text, remark, create_by, create_time
+        ) values (
+            #{familyId}, #{memberId}, #{assetId}, #{ruleName}, #{ruleType}, #{thresholdValue}, #{secondThresholdValue},
+            #{enabled}, #{suggestionText}, #{remark}, #{createBy}, sysdate()
+        )
+    </insert>
+
+    <update id="updateAlertRule" parameterType="FinAlertRule">
+        update fin_alert_rule
+        <set>
+            family_id = #{familyId},
+            member_id = #{memberId},
+            asset_id = #{assetId},
+            rule_name = #{ruleName},
+            rule_type = #{ruleType},
+            threshold_value = #{thresholdValue},
+            second_threshold_value = #{secondThresholdValue},
+            enabled = #{enabled},
+            suggestion_text = #{suggestionText},
+            remark = #{remark},
+            update_by = #{updateBy},
+            update_time = sysdate()
+        </set>
+        where rule_id = #{ruleId}
+    </update>
+
+    <update id="deleteAlertRuleByIds" parameterType="Long">
+        update fin_alert_rule set del_flag = '2', update_time = sysdate()
+        where rule_id in
+        <foreach collection="array" item="ruleId" open="(" separator="," close=")">
+            #{ruleId}
+        </foreach>
+    </update>
+
+    <update id="updateLastTriggeredTime" parameterType="Long">
+        update fin_alert_rule set last_triggered_time = sysdate() where rule_id = #{ruleId}
+    </update>
+
+</mapper>

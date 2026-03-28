@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.FinAlertEventMapper">
+
+    <resultMap type="FinAlertEvent" id="FinAlertEventResult">
+        <id property="eventId" column="event_id"/>
+        <result property="ruleId" column="rule_id"/>
+        <result property="ruleName" column="rule_name"/>
+        <result property="familyId" column="family_id"/>
+        <result property="familyName" column="family_name"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberName" column="member_name"/>
+        <result property="assetId" column="asset_id"/>
+        <result property="assetName" column="asset_name"/>
+        <result property="eventTitle" column="event_title"/>
+        <result property="ruleType" column="rule_type"/>
+        <result property="triggerValue" column="trigger_value"/>
+        <result property="thresholdValue" column="threshold_value"/>
+        <result property="secondThresholdValue" column="second_threshold_value"/>
+        <result property="triggerTime" column="trigger_time"/>
+        <result property="status" column="status"/>
+        <result property="suggestionText" column="suggestion_text"/>
+        <result property="detailText" column="detail_text"/>
+    </resultMap>
+
+    <sql id="selectEventVo">
+        select e.event_id, e.rule_id, r.rule_name, e.family_id, f.family_name, e.member_id, m.member_name,
+               e.asset_id, a.asset_name, e.event_title, e.rule_type, e.trigger_value, e.threshold_value,
+               e.second_threshold_value, e.trigger_time, e.status, e.suggestion_text, e.detail_text
+        from fin_alert_event e
+        left join fin_alert_rule r on r.rule_id = e.rule_id
+        left join fin_family f on f.family_id = e.family_id
+        left join fin_member_account m on m.member_id = e.member_id
+        left join fin_asset a on a.asset_id = e.asset_id
+    </sql>
+
+    <select id="selectAlertEventList" parameterType="FinAlertEvent" resultMap="FinAlertEventResult">
+        <include refid="selectEventVo"/>
+        <where>
+            1 = 1
+            <if test="ruleId != null">and e.rule_id = #{ruleId}</if>
+            <if test="familyId != null">and e.family_id = #{familyId}</if>
+            <if test="memberId != null">and e.member_id = #{memberId}</if>
+            <if test="assetId != null">and e.asset_id = #{assetId}</if>
+            <if test="ruleType != null and ruleType != ''">and e.rule_type = #{ruleType}</if>
+            <if test="status != null and status != ''">and e.status = #{status}</if>
+        </where>
+        order by e.trigger_time desc, e.event_id desc
+    </select>
+
+    <insert id="insertAlertEvent" parameterType="FinAlertEvent" useGeneratedKeys="true" keyProperty="eventId">
+        insert into fin_alert_event(
+            rule_id, family_id, member_id, asset_id, event_title, rule_type, trigger_value, threshold_value,
+            second_threshold_value, trigger_time, status, suggestion_text, detail_text, create_time
+        ) values (
+            #{ruleId}, #{familyId}, #{memberId}, #{assetId}, #{eventTitle}, #{ruleType}, #{triggerValue}, #{thresholdValue},
+            #{secondThresholdValue}, #{triggerTime}, #{status}, #{suggestionText}, #{detailText}, sysdate()
+        )
+    </insert>
+
+    <select id="countTodayEventByRuleId" parameterType="Long" resultType="int">
+        select count(1) from fin_alert_event
+        where rule_id = #{ruleId} and date(trigger_time) = curdate()
+    </select>
+
+    <update id="updateAlertEventStatus">
+        update fin_alert_event set status = #{status} where event_id = #{eventId}
+    </update>
+
+</mapper>
