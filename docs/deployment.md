@@ -108,6 +108,90 @@ mvn clean package -DskipTests
 moco-admin/target/moco-admin.jar
 ```
 
+## 6.4 验证码开关配置
+
+登录和注册页验证码开关由系统参数控制，不是前端写死。
+
+配置项：
+
+- 参数键：`sys.account.captchaEnabled`
+- `true`：开启验证码
+- `false`：关闭验证码
+
+推荐优先使用后台页面修改。
+
+后台开启步骤：
+
+1. 登录后台
+2. 进入 `系统管理 -> 参数设置`
+3. 搜索 `sys.account.captchaEnabled`
+4. 打开参数编辑页
+5. 将参数值改为 `true`
+6. 保存
+
+后台关闭步骤：
+
+1. 登录后台
+2. 进入 `系统管理 -> 参数设置`
+3. 搜索 `sys.account.captchaEnabled`
+4. 打开参数编辑页
+5. 将参数值改为 `false`
+6. 保存
+
+数据库直接开启：
+
+```sql
+update sys_config
+set config_value = 'true'
+where config_key = 'sys.account.captchaEnabled';
+```
+
+数据库直接关闭：
+
+```sql
+update sys_config
+set config_value = 'false'
+where config_key = 'sys.account.captchaEnabled';
+```
+
+生效说明：
+
+- 项目会把系统参数加载到 Redis 缓存
+- 如果修改后页面仍未生效，建议执行以下任一操作：
+
+```bash
+./moco.sh restart
+```
+
+或者按精确缓存键清理 Redis 后重试：
+
+```bash
+docker exec moco-redis redis-cli DEL sys_config:sys.account.captchaEnabled
+```
+
+建议排查顺序：
+
+1. 修改后台参数或数据库参数
+2. 退出并重新登录
+3. 浏览器强制刷新
+4. 执行 `./moco.sh restart`
+5. 如仍未生效，再执行 Redis 删除命令
+
+验证码接口：
+
+- `GET /captchaImage`
+
+本地验证命令：
+
+```bash
+curl http://127.0.0.1:8080/captchaImage
+```
+
+返回中：
+
+- `captchaEnabled: true` 代表已开启
+- `captchaEnabled: false` 代表已关闭
+
 ### 6.2 直接运行
 
 ```bash
