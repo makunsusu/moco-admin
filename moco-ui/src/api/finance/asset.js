@@ -22,6 +22,14 @@ export function getAsset(assetId) {
   })
 }
 
+export function getAssetDetail(assetId, query) {
+  return request({
+    url: '/finance/asset/detail/' + assetId,
+    method: 'get',
+    params: query
+  })
+}
+
 export function addAsset(data) {
   return request({
     url: '/finance/asset',

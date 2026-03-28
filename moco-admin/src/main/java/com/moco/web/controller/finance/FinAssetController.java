@@ -48,6 +48,13 @@ public class FinAssetController extends BaseController
         return success(assetService.selectAssetById(assetId));
     }
 
+    @PreAuthorize("@ss.hasPermi('finance:asset:query')")
+    @GetMapping("/detail/{assetId}")
+    public AjaxResult getDetail(@PathVariable Long assetId, Integer klineLimit)
+    {
+        return success(assetService.selectAssetDetail(assetId, klineLimit));
+    }
+
     @PreAuthorize("@ss.hasPermi('finance:asset:add')")
     @Log(title = "资产标的管理", businessType = BusinessType.INSERT)
     @PostMapping

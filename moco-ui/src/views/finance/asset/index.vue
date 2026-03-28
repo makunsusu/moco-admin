@@ -42,7 +42,11 @@
     <el-table v-loading="loading" :data="assetList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="资产代码" prop="assetCode" width="110" />
-      <el-table-column label="资产名称" prop="assetName" min-width="160" />
+      <el-table-column label="资产名称" prop="assetName" min-width="180">
+        <template slot-scope="scope">
+          <el-link type="primary" :underline="false" @click="handleDetail(scope.row)">{{ scope.row.assetName }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="类型" prop="assetType" width="100">
         <template slot-scope="scope">
           <el-tag size="small">{{ assetTypeLabel(scope.row.assetType) }}</el-tag>
@@ -70,8 +74,9 @@
           <span>{{ parseTime(scope.row.quoteTime) || '--' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="160">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="220">
         <template slot-scope="scope">
+          <el-button size="mini" type="text" icon="el-icon-data-analysis" @click="handleDetail(scope.row)" v-hasPermi="['finance:asset:query']">详情</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['finance:asset:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['finance:asset:remove']">删除</el-button>
         </template>
@@ -236,6 +241,9 @@ export default {
         this.$modal.msgSuccess('删除成功')
         this.getList()
       }).catch(() => {})
+    },
+    handleDetail(row) {
+      this.$router.push('/finance/asset-detail/index/' + row.assetId)
     },
     submitForm() {
       this.$refs.form.validate(valid => {

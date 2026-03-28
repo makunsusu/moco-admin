@@ -22,10 +22,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="insertQuoteSnapshot" parameterType="FinQuoteSnapshot" useGeneratedKeys="true" keyProperty="quoteId">
         insert into fin_quote_snapshot(
-            asset_id, snapshot_date, quote_time, provider_code, last_price, open_price,
+            asset_id, asset_code, asset_name, snapshot_date, quote_time, provider_code, last_price, open_price,
             prev_close_price, change_amount, change_rate, raw_payload, create_time
         ) values (
-            #{assetId}, #{snapshotDate}, #{quoteTime}, #{providerCode}, #{lastPrice}, #{openPrice},
+            #{assetId}, #{assetCode}, #{assetName}, #{snapshotDate}, #{quoteTime}, #{providerCode}, #{lastPrice}, #{openPrice},
             #{prevClosePrice}, #{changeAmount}, #{changeRate}, #{rawPayload}, sysdate()
         )
     </insert>

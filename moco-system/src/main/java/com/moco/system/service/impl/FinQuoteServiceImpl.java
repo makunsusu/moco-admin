@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moco.system.domain.FinAsset;
 import com.moco.system.domain.FinHoldingSnapshot;
+import com.moco.system.domain.FinKlineSnapshot;
 import com.moco.system.domain.FinQuoteSnapshot;
 import com.moco.system.domain.vo.FinPositionSummary;
 import com.moco.system.mapper.FinHoldingSnapshotMapper;
+import com.moco.system.mapper.FinKlineSnapshotMapper;
 import com.moco.system.mapper.FinQuoteSnapshotMapper;
 import com.moco.system.service.IFinAssetService;
 import com.moco.system.service.IFinQuoteService;
@@ -34,6 +36,9 @@ public class FinQuoteServiceImpl implements IFinQuoteService
     private FinHoldingSnapshotMapper holdingSnapshotMapper;
 
     @Autowired
+    private FinKlineSnapshotMapper klineSnapshotMapper;
+
+    @Autowired
     private QuoteProviderFactory quoteProviderFactory;
 
     @Autowired
@@ -50,6 +55,7 @@ public class FinQuoteServiceImpl implements IFinQuoteService
             : filterAssets(assetIds);
         int successCount = 0;
         int failCount = 0;
+        int klineSyncCount = 0;
         List<String> errors = new ArrayList<>();
 
         for (FinAsset asset : assets)
@@ -63,6 +69,7 @@ public class FinQuoteServiceImpl implements IFinQuoteService
                 }
                 FinQuoteSnapshot snapshot = provider.query(asset);
                 quoteSnapshotMapper.insertQuoteSnapshot(snapshot);
+                klineSyncCount += syncKlines(asset, provider, errors);
                 successCount++;
             }
             catch (Exception e)
@@ -78,6 +85,7 @@ public class FinQuoteServiceImpl implements IFinQuoteService
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("successCount", successCount);
         result.put("failCount", failCount);
+        result.put("klineSyncCount", klineSyncCount);
         result.put("errors", errors);
         return result;
     }
@@ -161,6 +169,29 @@ public class FinQuoteServiceImpl implements IFinQuoteService
                 ? marketValue.divide(totalMarketValue, 4, RoundingMode.HALF_UP)
                 : BigDecimal.ZERO);
             holdingSnapshotMapper.insertHoldingSnapshot(snapshot);
+        }
+    }
+
+    private int syncKlines(FinAsset asset, QuoteProvider provider, List<String> errors)
+    {
+        if (!provider.supportsKline(asset))
+        {
+            return 0;
+        }
+        try
+        {
+            List<FinKlineSnapshot> klineList = provider.queryDailyKlines(asset, 180);
+            if (klineList == null || klineList.isEmpty())
+            {
+                return 0;
+            }
+            klineSnapshotMapper.batchUpsertKlineSnapshots(klineList);
+            return klineList.size();
+        }
+        catch (Exception e)
+        {
+            errors.add(asset.getAssetName() + " K线同步失败：" + e.getMessage());
+            return 0;
         }
     }
 }

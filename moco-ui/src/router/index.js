@@ -167,6 +167,20 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
+  },
+  {
+    path: '/finance/asset-detail',
+    component: Layout,
+    hidden: true,
+    permissions: ['finance:asset:query'],
+    children: [
+      {
+        path: 'index/:assetId(\\d+)',
+        component: () => import('@/views/finance/asset/detail'),
+        name: 'FinanceAssetDetail',
+        meta: { title: '资产详情', activeMenu: '/finance/asset' }
+      }
+    ]
   }
 ]
 
