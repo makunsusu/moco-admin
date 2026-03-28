@@ -189,7 +189,14 @@
             <el-table-column label="资产" min-width="180">
               <template slot-scope="scope">
                 <div class="finance-table-meta">
-                  <div class="finance-table-meta__main">{{ scope.row.assetName }}</div>
+                  <el-link
+                    v-if="scope.row.assetId"
+                    type="primary"
+                    :underline="false"
+                    class="finance-table-meta__main"
+                    @click="goAssetDetail(scope.row.assetId)"
+                  >{{ scope.row.assetName }}</el-link>
+                  <div v-else class="finance-table-meta__main">{{ scope.row.assetName }}</div>
                   <div class="finance-table-meta__sub">{{ scope.row.assetCode }}</div>
                 </div>
               </template>
@@ -575,6 +582,12 @@ export default {
       if (Number(value || 0) > 0) return 'finance-profit-up'
       if (Number(value || 0) < 0) return 'finance-profit-down'
       return ''
+    },
+    goAssetDetail(assetId) {
+      if (!assetId) {
+        return
+      }
+      this.$router.push('/finance/asset-detail/index/' + assetId)
     },
     summaryValueClass(item, value) {
       if (item.className !== 'is-dynamic') {

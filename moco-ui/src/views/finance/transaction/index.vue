@@ -90,7 +90,20 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="资产" prop="assetName" min-width="160" />
+        <el-table-column label="资产" min-width="180">
+          <template slot-scope="scope">
+            <div class="finance-table-meta">
+              <el-link
+                v-if="scope.row.assetId"
+                type="primary"
+                :underline="false"
+                class="finance-table-meta__main"
+                @click="goAssetDetail(scope.row.assetId)"
+              >{{ scope.row.assetName || '--' }}</el-link>
+              <div v-else class="finance-table-meta__main">{{ scope.row.assetName || '--' }}</div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="类型" prop="transactionType" width="120">
           <template slot-scope="scope">
             <el-tag size="small" :type="tagType(scope.row.transactionType)">{{ transactionTypeLabel(scope.row.transactionType) }}</el-tag>
@@ -430,6 +443,12 @@ export default {
         TRANSFER_OUT: 'info'
       }
       return map[value] || ''
+    },
+    goAssetDetail(assetId) {
+      if (!assetId) {
+        return
+      }
+      this.$router.push('/finance/asset-detail/index/' + assetId)
     },
     formatNumber(value, scale = 2) {
       return Number(value || 0).toFixed(scale)

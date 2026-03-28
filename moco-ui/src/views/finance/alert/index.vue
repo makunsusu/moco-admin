@@ -59,6 +59,20 @@
                 </div>
               </template>
             </el-table-column>
+            <el-table-column label="资产" min-width="160">
+              <template slot-scope="scope">
+                <div class="finance-table-meta">
+                  <el-link
+                    v-if="scope.row.assetId"
+                    type="primary"
+                    :underline="false"
+                    class="finance-table-meta__main"
+                    @click="goAssetDetail(scope.row.assetId)"
+                  >{{ scope.row.assetName || '全部资产' }}</el-link>
+                  <div v-else class="finance-table-meta__main">{{ scope.row.assetName || '全部资产' }}</div>
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column label="规则类型" prop="ruleType" min-width="130">
               <template slot-scope="scope">{{ ruleTypeLabel(scope.row.ruleType) }}</template>
             </el-table-column>
@@ -115,6 +129,20 @@
                 <div class="finance-table-meta">
                   <div class="finance-table-meta__main">{{ scope.row.eventTitle }}</div>
                   <div class="finance-table-meta__sub">{{ formatEventMetric(scope.row) }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="资产" min-width="160">
+              <template slot-scope="scope">
+                <div class="finance-table-meta">
+                  <el-link
+                    v-if="scope.row.assetId"
+                    type="primary"
+                    :underline="false"
+                    class="finance-table-meta__main"
+                    @click="goAssetDetail(scope.row.assetId)"
+                  >{{ scope.row.assetName || '--' }}</el-link>
+                  <div v-else class="finance-table-meta__main">{{ scope.row.assetName || '--' }}</div>
                 </div>
               </template>
             </el-table-column>
@@ -411,6 +439,12 @@ export default {
     eventStatusClass(value) {
       const map = { '0': 'is-danger', '1': 'is-success', '2': '' }
       return map[value] || ''
+    },
+    goAssetDetail(assetId) {
+      if (!assetId) {
+        return
+      }
+      this.$router.push('/finance/asset-detail/index/' + assetId)
     }
   }
 }
