@@ -47,6 +47,14 @@
 docker compose up -d
 ```
 
+也可以使用脚本统一管理依赖：
+
+```bash
+./moco.sh deps-up
+./moco.sh deps-status
+./moco.sh deps-down
+```
+
 默认会创建：
 
 - 数据库：`moco_admin`
@@ -118,6 +126,22 @@ chmod +x moco.sh
 ./moco.sh stop
 ```
 
+一体化命令：
+
+```bash
+./moco.sh up
+./moco.sh down
+```
+
+前端单独控制：
+
+```bash
+./moco.sh web-start
+./moco.sh web-status
+./moco.sh web-logs
+./moco.sh web-stop
+```
+
 Windows：
 
 ```bat
@@ -127,12 +151,33 @@ moco.bat logs
 moco.bat stop
 ```
 
+Windows 一体化命令：
+
+```bat
+moco.bat deps-up
+moco.bat deps-status
+moco.bat up
+moco.bat down
+```
+
+Windows 前端单独控制：
+
+```bat
+moco.bat web-start
+moco.bat web-status
+moco.bat web-logs
+moco.bat web-stop
+```
+
 脚本支持：
 
 - 自动定位 `moco-admin/target/moco-admin.jar`
+- 自动定位 `moco-ui`
 - 自动创建 `logs/`、`runtime/`
+- 支持统一管理 Docker 中的 MySQL / Redis 依赖
+- 支持统一管理前端开发服务
 - 支持通过 `JAVA_HOME` 指定 Java 路径
-- 支持通过 `JVM_OPTS` 和 `APP_ARGS` 自定义参数
+- 支持通过 `JVM_OPTS`、`APP_ARGS` 和 `WEB_PORT` 自定义参数
 
 ## 7. 前端构建与运行
 
@@ -142,6 +187,12 @@ moco.bat stop
 cd moco-ui
 npm install
 npm run dev -- --port 18081
+```
+
+也可以通过脚本启动前端开发服务：
+
+```bash
+./moco.sh web-start
 ```
 
 ### 7.2 生产构建

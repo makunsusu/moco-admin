@@ -87,6 +87,12 @@ moco-admin/
 docker compose up -d
 ```
 
+或者直接使用一体化脚本：
+
+```bash
+./moco.sh deps-up
+```
+
 ### 3. 构建后端
 
 ```bash
@@ -103,10 +109,23 @@ chmod +x moco.sh
 ./moco.sh start
 ```
 
+如果希望一键拉起依赖、后端和前端：
+
+```bash
+./moco.sh up
+```
+
 Windows：
 
 ```bat
 moco.bat start
+```
+
+Windows 一体化命令：
+
+```bat
+moco.bat deps-up
+moco.bat up
 ```
 
 ### 5. 启动前端
@@ -115,6 +134,24 @@ moco.bat start
 cd moco-ui
 npm install
 npm run dev -- --port 18081
+```
+
+也可以直接使用脚本单独管理前端：
+
+```bash
+./moco.sh web-start
+./moco.sh web-status
+./moco.sh web-logs
+./moco.sh web-stop
+```
+
+Windows：
+
+```bat
+moco.bat web-start
+moco.bat web-status
+moco.bat web-logs
+moco.bat web-stop
 ```
 
 ## 默认访问信息
