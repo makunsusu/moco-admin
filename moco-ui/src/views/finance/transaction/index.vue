@@ -1,155 +1,207 @@
 <template>
-  <div class="app-container">
-    <el-form ref="queryForm" :model="queryParams" size="small" :inline="true" v-show="showSearch" label-width="84px">
-      <el-form-item label="家庭" prop="familyId">
-        <el-select v-model="queryParams.familyId" placeholder="全部家庭" clearable style="width: 160px" @change="handleFamilyChange">
-          <el-option v-for="item in familyOptions" :key="item.familyId" :label="item.familyName" :value="item.familyId" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="成员" prop="memberId">
-        <el-select v-model="queryParams.memberId" placeholder="全部成员" clearable style="width: 160px" @change="handleMemberChange">
-          <el-option v-for="item in memberOptions" :key="item.memberId" :label="item.memberName" :value="item.memberId" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="账户" prop="accountId">
-        <el-select v-model="queryParams.accountId" placeholder="全部账户" clearable style="width: 180px">
-          <el-option v-for="item in accountOptions" :key="item.accountId" :label="item.accountName" :value="item.accountId" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="资产" prop="assetId">
-        <el-select v-model="queryParams.assetId" placeholder="全部资产" clearable filterable style="width: 180px">
-          <el-option v-for="item in assetOptions" :key="item.assetId" :label="item.assetName" :value="item.assetId" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="类型" prop="transactionType">
-        <el-select v-model="queryParams.transactionType" placeholder="全部类型" clearable style="width: 160px">
-          <el-option v-for="item in transactionTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+  <div class="app-container finance-page finance-transaction-page">
+    <div class="finance-hero">
+      <div>
+        <div class="finance-hero__eyebrow">Trading Journal</div>
+        <h1 class="finance-hero__title">交易流水</h1>
+        <p class="finance-hero__desc">把买入、卖出、分红和转入转出统一收口，先看交易统计，再定位具体记录，降低表格疲劳感。</p>
+      </div>
+      <div class="finance-hero__actions">
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['finance:transaction:add']">新增交易</el-button>
+        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport" v-hasPermi="['finance:transaction:export']">导出流水</el-button>
+      </div>
+    </div>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['finance:transaction:add']">新增</el-button>
+    <el-card shadow="never" class="finance-filter-card">
+      <div class="finance-filter-head">
+        <div>
+          <div class="finance-filter-head__title">范围筛选</div>
+          <div class="finance-filter-head__desc">按家庭、成员、账户和资产快速定位交易记录，筛选结果会同步更新顶部统计摘要。</div>
+        </div>
+      </div>
+      <el-form ref="queryForm" :model="queryParams" size="small" :inline="true" v-show="showSearch" label-width="84px">
+        <el-form-item label="家庭" prop="familyId">
+          <el-select v-model="queryParams.familyId" placeholder="全部家庭" clearable style="width: 160px" @change="handleFamilyChange">
+            <el-option v-for="item in familyOptions" :key="item.familyId" :label="item.familyName" :value="item.familyId" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="成员" prop="memberId">
+          <el-select v-model="queryParams.memberId" placeholder="全部成员" clearable style="width: 160px" @change="handleMemberChange">
+            <el-option v-for="item in memberOptions" :key="item.memberId" :label="item.memberName" :value="item.memberId" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="账户" prop="accountId">
+          <el-select v-model="queryParams.accountId" placeholder="全部账户" clearable style="width: 180px">
+            <el-option v-for="item in accountOptions" :key="item.accountId" :label="item.accountName" :value="item.accountId" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="资产" prop="assetId">
+          <el-select v-model="queryParams.assetId" placeholder="全部资产" clearable filterable style="width: 180px">
+            <el-option v-for="item in assetOptions" :key="item.assetId" :label="item.assetName" :value="item.assetId" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="类型" prop="transactionType">
+          <el-select v-model="queryParams.transactionType" placeholder="全部类型" clearable style="width: 160px">
+            <el-option v-for="item in transactionTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
+    <el-row :gutter="16" class="finance-summary-grid">
+      <el-col :xs="24" :sm="12" :lg="6" v-for="item in summaryCards" :key="item.label">
+        <el-card shadow="never" class="finance-summary-card">
+          <div class="finance-summary-card__label">{{ item.label }}</div>
+          <div class="finance-summary-card__value">{{ item.value }}</div>
+          <div class="finance-summary-card__meta">{{ item.desc }}</div>
+        </el-card>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate" v-hasPermi="['finance:transaction:edit']">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['finance:transaction:remove']">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport" v-hasPermi="['finance:transaction:export']">导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" />
     </el-row>
 
-    <el-table v-loading="loading" :data="transactionList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="交易时间" prop="tradeDate" width="170">
-        <template slot-scope="scope">{{ parseTime(scope.row.tradeDate) }}</template>
-      </el-table-column>
-      <el-table-column label="家庭" prop="familyName" min-width="110" />
-      <el-table-column label="成员" prop="memberName" min-width="100" />
-      <el-table-column label="账户" prop="accountName" min-width="140" />
-      <el-table-column label="资产" prop="assetName" min-width="150" />
-      <el-table-column label="类型" prop="transactionType" width="120">
-        <template slot-scope="scope">
-          <el-tag size="small" :type="tagType(scope.row.transactionType)">{{ transactionTypeLabel(scope.row.transactionType) }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="数量" min-width="100">
-        <template slot-scope="scope">{{ formatNumber(scope.row.quantity, 4) }}</template>
-      </el-table-column>
-      <el-table-column label="价格" min-width="100">
-        <template slot-scope="scope">{{ formatNumber(scope.row.price, 4) }}</template>
-      </el-table-column>
-      <el-table-column label="金额" min-width="110">
-        <template slot-scope="scope">¥{{ formatNumber(scope.row.amount) }}</template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="160">
-        <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['finance:transaction:edit']">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['finance:transaction:remove']">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-card shadow="never" class="finance-section-card">
+      <div slot="header" class="finance-section-head">
+        <div>
+          <div class="finance-section-head__title">交易记录</div>
+          <div class="finance-section-head__desc">突出交易类型、金额和时间，买卖方向通过颜色标签快速识别。</div>
+        </div>
+        <div class="finance-toolbar">
+          <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['finance:transaction:add']">新增</el-button>
+          <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate" v-hasPermi="['finance:transaction:edit']">修改</el-button>
+          <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['finance:transaction:remove']">删除</el-button>
+          <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport" v-hasPermi="['finance:transaction:export']">导出</el-button>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" />
+        </div>
+      </div>
 
-    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
+      <el-table v-loading="loading" :data="transactionList" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="交易时间" prop="tradeDate" width="170">
+          <template slot-scope="scope">{{ parseTime(scope.row.tradeDate) }}</template>
+        </el-table-column>
+        <el-table-column label="归属" min-width="180">
+          <template slot-scope="scope">
+            <div class="finance-table-meta">
+              <div class="finance-table-meta__main">{{ scope.row.familyName || '--' }} / {{ scope.row.memberName || '--' }}</div>
+              <div class="finance-table-meta__sub">{{ scope.row.accountName || '--' }}</div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="资产" prop="assetName" min-width="160" />
+        <el-table-column label="类型" prop="transactionType" width="120">
+          <template slot-scope="scope">
+            <el-tag size="small" :type="tagType(scope.row.transactionType)">{{ transactionTypeLabel(scope.row.transactionType) }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="数量" min-width="100" align="right">
+          <template slot-scope="scope">{{ formatNumber(scope.row.quantity, 4) }}</template>
+        </el-table-column>
+        <el-table-column label="价格" min-width="100" align="right">
+          <template slot-scope="scope">{{ formatNumber(scope.row.price, 4) }}</template>
+        </el-table-column>
+        <el-table-column label="金额" min-width="120" align="right">
+          <template slot-scope="scope">¥{{ formatNumber(scope.row.amount) }}</template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="160">
+          <template slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['finance:transaction:edit']">修改</el-button>
+            <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['finance:transaction:remove']">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
+      <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
+    </el-card>
+
+    <el-dialog :title="title" :visible.sync="open" width="680px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="92px">
-        <el-row :gutter="16">
-          <el-col :span="12">
-            <el-form-item label="所属家庭" prop="familyId">
-              <el-select v-model="form.familyId" placeholder="请选择家庭" style="width: 100%" @change="handleFormFamilyChange">
-                <el-option v-for="item in familyOptions" :key="item.familyId" :label="item.familyName" :value="item.familyId" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="所属成员" prop="memberId">
-              <el-select v-model="form.memberId" placeholder="请选择成员" style="width: 100%" @change="handleFormMemberChange">
-                <el-option v-for="item in formMemberOptions" :key="item.memberId" :label="item.memberName" :value="item.memberId" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="所属账户" prop="accountId">
-              <el-select v-model="form.accountId" placeholder="请选择账户" style="width: 100%">
-                <el-option v-for="item in formAccountOptions" :key="item.accountId" :label="item.accountName" :value="item.accountId" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="资产标的" prop="assetId">
-              <el-select v-model="form.assetId" placeholder="请选择资产" filterable style="width: 100%">
-                <el-option v-for="item in assetOptions" :key="item.assetId" :label="item.assetName" :value="item.assetId" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="交易类型" prop="transactionType">
-              <el-select v-model="form.transactionType" placeholder="请选择类型" style="width: 100%">
-                <el-option v-for="item in transactionTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="交易时间" prop="tradeDate">
-              <el-date-picker v-model="form.tradeDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择交易时间" style="width: 100%" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="数量" prop="quantity">
-              <el-input-number v-model="form.quantity" :min="0.0001" :precision="4" :step="1" controls-position="right" style="width: 100%" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="价格">
-              <el-input-number v-model="form.price" :min="0" :precision="4" :step="0.01" controls-position="right" style="width: 100%" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="手续费">
-              <el-input-number v-model="form.fee" :min="0" :precision="2" :step="1" controls-position="right" style="width: 100%" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="成交金额">
-              <el-input-number v-model="form.amount" :min="0" :precision="2" :step="10" controls-position="right" style="width: 100%" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="备注">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <div class="finance-form-section">
+          <div class="finance-form-section__title">账户归属</div>
+          <el-row :gutter="16">
+            <el-col :span="12">
+              <el-form-item label="所属家庭" prop="familyId">
+                <el-select v-model="form.familyId" placeholder="请选择家庭" style="width: 100%" @change="handleFormFamilyChange">
+                  <el-option v-for="item in familyOptions" :key="item.familyId" :label="item.familyName" :value="item.familyId" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="所属成员" prop="memberId">
+                <el-select v-model="form.memberId" placeholder="请选择成员" style="width: 100%" @change="handleFormMemberChange">
+                  <el-option v-for="item in formMemberOptions" :key="item.memberId" :label="item.memberName" :value="item.memberId" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="所属账户" prop="accountId">
+                <el-select v-model="form.accountId" placeholder="请选择账户" style="width: 100%">
+                  <el-option v-for="item in formAccountOptions" :key="item.accountId" :label="item.accountName" :value="item.accountId" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div class="finance-form-section">
+          <div class="finance-form-section__title">交易信息</div>
+          <el-row :gutter="16">
+            <el-col :span="12">
+              <el-form-item label="资产标的" prop="assetId">
+                <el-select v-model="form.assetId" placeholder="请选择资产" filterable style="width: 100%">
+                  <el-option v-for="item in assetOptions" :key="item.assetId" :label="item.assetName" :value="item.assetId" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="交易类型" prop="transactionType">
+                <el-select v-model="form.transactionType" placeholder="请选择类型" style="width: 100%">
+                  <el-option v-for="item in transactionTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="交易时间" prop="tradeDate">
+                <el-date-picker v-model="form.tradeDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择交易时间" style="width: 100%" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div class="finance-form-section">
+          <div class="finance-form-section__title">金额信息</div>
+          <el-row :gutter="16">
+            <el-col :span="8">
+              <el-form-item label="数量" prop="quantity">
+                <el-input-number v-model="form.quantity" :min="0.0001" :precision="4" :step="1" controls-position="right" style="width: 100%" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="价格">
+                <el-input-number v-model="form.price" :min="0" :precision="4" :step="0.01" controls-position="right" style="width: 100%" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="手续费">
+                <el-input-number v-model="form.fee" :min="0" :precision="2" :step="1" controls-position="right" style="width: 100%" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="成交金额">
+                <el-input-number v-model="form.amount" :min="0" :precision="2" :step="10" controls-position="right" style="width: 100%" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div class="finance-form-section">
+          <div class="finance-form-section__title">补充备注</div>
+          <el-form-item label="备注">
+            <el-input v-model="form.remark" type="textarea" :rows="3" placeholder="请输入备注" />
+          </el-form-item>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -210,6 +262,24 @@ export default {
         tradeDate: [{ required: true, message: '请选择交易时间', trigger: 'change' }],
         quantity: [{ required: true, message: '请输入交易数量', trigger: 'blur' }]
       }
+    }
+  },
+  computed: {
+    summaryCards() {
+      const list = this.transactionList || []
+      const buyCount = list.filter(item => item.transactionType === 'BUY').length
+      const sellCount = list.filter(item => item.transactionType === 'SELL').length
+      const latestTrade = list.reduce((latest, item) => {
+        const current = item.tradeDate || ''
+        return current && current > latest ? current : latest
+      }, '')
+      const totalAmount = list.reduce((sum, item) => sum + Number(item.amount || 0), 0)
+      return [
+        { label: '交易笔数', value: String(this.total || list.length), desc: '当前筛选范围内的流水总数' },
+        { label: '买入 / 卖出', value: buyCount + ' / ' + sellCount, desc: '便于观察近期买卖节奏' },
+        { label: '成交金额', value: '¥' + this.formatNumber(totalAmount), desc: '当前页交易金额汇总' },
+        { label: '最近交易', value: this.parseTime(latestTrade) || '--', desc: '以当前列表中最新时间为准' }
+      ]
     }
   },
   created() {
@@ -367,3 +437,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.finance-transaction-page ::v-deep .el-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+</style>

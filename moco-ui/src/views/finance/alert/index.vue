@@ -1,11 +1,38 @@
 <template>
-  <div class="app-container finance-alert">
+  <div class="app-container finance-page finance-alert">
+    <div class="finance-hero">
+      <div>
+        <div class="finance-hero__eyebrow">Alert Center</div>
+        <h1 class="finance-hero__title">提醒中心</h1>
+        <p class="finance-hero__desc">把规则配置和事件处理放在同一视图里，优先处理未处理提醒，再回头调整阈值和作用范围。</p>
+      </div>
+      <div class="finance-hero__actions">
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddRule" v-hasPermi="['finance:alert:add']">新增规则</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="refreshAll">刷新数据</el-button>
+      </div>
+    </div>
+
+    <el-row :gutter="16" class="finance-summary-grid">
+      <el-col :xs="24" :sm="12" :lg="6" v-for="item in summaryCards" :key="item.label">
+        <el-card shadow="never" class="finance-summary-card">
+          <div class="finance-summary-card__label">{{ item.label }}</div>
+          <div class="finance-summary-card__value" :class="item.className">{{ item.value }}</div>
+          <div class="finance-summary-card__meta">{{ item.desc }}</div>
+        </el-card>
+      </el-col>
+    </el-row>
+
     <el-row :gutter="16">
       <el-col :xs="24" :lg="11">
-        <el-card shadow="never" class="panel-card">
-          <div slot="header" class="panel-header">
-            <span>提醒规则</span>
-            <el-button size="mini" type="primary" plain icon="el-icon-plus" @click="handleAddRule" v-hasPermi="['finance:alert:add']">新增规则</el-button>
+        <el-card shadow="never" class="finance-section-card">
+          <div slot="header" class="finance-section-head">
+            <div>
+              <div class="finance-section-head__title">提醒规则</div>
+              <div class="finance-section-head__desc">按作用范围和规则类型筛选，优先查看启用中的规则是否覆盖当前关注标的。</div>
+            </div>
+            <div class="finance-toolbar">
+              <el-button size="mini" type="primary" plain icon="el-icon-plus" @click="handleAddRule" v-hasPermi="['finance:alert:add']">新增规则</el-button>
+            </div>
           </div>
           <el-form ref="ruleQueryForm" :model="ruleQuery" size="small" :inline="true" label-width="68px">
             <el-form-item label="家庭">
@@ -24,7 +51,14 @@
             </el-form-item>
           </el-form>
           <el-table v-loading="ruleLoading" :data="ruleList" height="560">
-            <el-table-column label="规则名称" prop="ruleName" min-width="180" />
+            <el-table-column label="规则名称" min-width="200">
+              <template slot-scope="scope">
+                <div class="finance-table-meta">
+                  <div class="finance-table-meta__main">{{ scope.row.ruleName }}</div>
+                  <div class="finance-table-meta__sub">{{ scope.row.familyName || '全部家庭' }}</div>
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column label="规则类型" prop="ruleType" min-width="130">
               <template slot-scope="scope">{{ ruleTypeLabel(scope.row.ruleType) }}</template>
             </el-table-column>
@@ -33,7 +67,7 @@
             </el-table-column>
             <el-table-column label="状态" prop="enabled" width="80">
               <template slot-scope="scope">
-                <el-tag size="small" :type="scope.row.enabled === '1' ? 'success' : 'info'">{{ scope.row.enabled === '1' ? '启用' : '停用' }}</el-tag>
+                <span class="finance-badge" :class="scope.row.enabled === '1' ? 'is-success' : ''">{{ scope.row.enabled === '1' ? '启用' : '停用' }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="150" align="center">
@@ -47,10 +81,12 @@
       </el-col>
 
       <el-col :xs="24" :lg="13">
-        <el-card shadow="never" class="panel-card">
-          <div slot="header" class="panel-header">
-            <span>提醒事件</span>
-            <span class="subtle-text">支持标记已读或忽略，方便复盘和筛选</span>
+        <el-card shadow="never" class="finance-section-card">
+          <div slot="header" class="finance-section-head">
+            <div>
+              <div class="finance-section-head__title">提醒事件</div>
+              <div class="finance-section-head__desc">重点突出未处理事件、建议动作和触发值，便于当天快速处理和复盘。</div>
+            </div>
           </div>
           <el-form ref="eventQueryForm" :model="eventQuery" size="small" :inline="true" label-width="68px">
             <el-form-item label="状态">
@@ -74,14 +110,18 @@
             <el-table-column label="触发时间" prop="triggerTime" width="170">
               <template slot-scope="scope">{{ parseTime(scope.row.triggerTime) }}</template>
             </el-table-column>
-            <el-table-column label="事件标题" prop="eventTitle" min-width="220" />
-            <el-table-column label="当前值/阈值" min-width="120">
-              <template slot-scope="scope">{{ formatEventMetric(scope.row) }}</template>
+            <el-table-column label="事件" min-width="240">
+              <template slot-scope="scope">
+                <div class="finance-table-meta">
+                  <div class="finance-table-meta__main">{{ scope.row.eventTitle }}</div>
+                  <div class="finance-table-meta__sub">{{ formatEventMetric(scope.row) }}</div>
+                </div>
+              </template>
             </el-table-column>
             <el-table-column label="建议动作" prop="suggestionText" min-width="180" show-overflow-tooltip />
             <el-table-column label="状态" prop="status" width="90">
               <template slot-scope="scope">
-                <el-tag size="small" :type="statusType(scope.row.status)">{{ statusLabel(scope.row.status) }}</el-tag>
+                <span class="finance-badge" :class="eventStatusClass(scope.row.status)">{{ statusLabel(scope.row.status) }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="130" align="center">
@@ -95,71 +135,78 @@
       </el-col>
     </el-row>
 
-    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="680px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="92px">
-        <el-row :gutter="16">
-          <el-col :span="12">
-            <el-form-item label="所属家庭" prop="familyId">
-              <el-select v-model="form.familyId" placeholder="请选择家庭" style="width: 100%" @change="handleFormFamilyChange">
-                <el-option v-for="item in familyOptions" :key="item.familyId" :label="item.familyName" :value="item.familyId" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="所属成员">
-              <el-select v-model="form.memberId" clearable placeholder="可选成员" style="width: 100%">
-                <el-option v-for="item in memberOptions" :key="item.memberId" :label="item.memberName" :value="item.memberId" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="资产标的">
-              <el-select v-model="form.assetId" clearable filterable placeholder="可选资产" style="width: 100%">
-                <el-option v-for="item in assetOptions" :key="item.assetId" :label="item.assetName" :value="item.assetId" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="规则名称" prop="ruleName">
-              <el-input v-model="form.ruleName" placeholder="请输入规则名称" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="规则类型" prop="ruleType">
-              <el-select v-model="form.ruleType" placeholder="请选择规则类型" style="width: 100%">
-                <el-option v-for="item in ruleTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="阈值" prop="thresholdValue">
-              <el-input-number v-model="form.thresholdValue" :precision="4" :step="0.01" controls-position="right" style="width: 100%" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="第二阈值">
-              <el-input-number v-model="form.secondThresholdValue" :precision="4" :step="0.01" controls-position="right" style="width: 100%" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="建议动作">
-              <el-input v-model="form.suggestionText" placeholder="例如：建议复核仓位，决定是否分批止盈" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="启用状态">
-              <el-radio-group v-model="form.enabled">
-                <el-radio label="1">启用</el-radio>
-                <el-radio label="0">停用</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="备注">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <div class="finance-form-section">
+          <div class="finance-form-section__title">作用范围</div>
+          <el-row :gutter="16">
+            <el-col :span="12">
+              <el-form-item label="所属家庭" prop="familyId">
+                <el-select v-model="form.familyId" placeholder="请选择家庭" style="width: 100%" @change="handleFormFamilyChange">
+                  <el-option v-for="item in familyOptions" :key="item.familyId" :label="item.familyName" :value="item.familyId" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="所属成员">
+                <el-select v-model="form.memberId" clearable placeholder="可选成员" style="width: 100%">
+                  <el-option v-for="item in memberOptions" :key="item.memberId" :label="item.memberName" :value="item.memberId" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="资产标的">
+                <el-select v-model="form.assetId" clearable filterable placeholder="可选资产" style="width: 100%">
+                  <el-option v-for="item in assetOptions" :key="item.assetId" :label="item.assetName" :value="item.assetId" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div class="finance-form-section">
+          <div class="finance-form-section__title">触发条件</div>
+          <el-row :gutter="16">
+            <el-col :span="12">
+              <el-form-item label="规则名称" prop="ruleName">
+                <el-input v-model="form.ruleName" placeholder="请输入规则名称" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="规则类型" prop="ruleType">
+                <el-select v-model="form.ruleType" placeholder="请选择规则类型" style="width: 100%">
+                  <el-option v-for="item in ruleTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="阈值" prop="thresholdValue">
+                <el-input-number v-model="form.thresholdValue" :precision="4" :step="0.01" controls-position="right" style="width: 100%" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="第二阈值">
+                <el-input-number v-model="form.secondThresholdValue" :precision="4" :step="0.01" controls-position="right" style="width: 100%" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div class="finance-form-section">
+          <div class="finance-form-section__title">处理建议</div>
+          <el-form-item label="建议动作">
+            <el-input v-model="form.suggestionText" placeholder="例如：建议复核仓位，决定是否分批止盈" />
+          </el-form-item>
+          <el-form-item label="启用状态">
+            <el-radio-group v-model="form.enabled">
+              <el-radio label="1">启用</el-radio>
+              <el-radio label="0">停用</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="form.remark" type="textarea" :rows="3" placeholder="请输入备注" />
+          </el-form-item>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -211,12 +258,29 @@ export default {
       }
     }
   },
+  computed: {
+    summaryCards() {
+      const enabledCount = this.ruleList.filter(item => item.enabled === '1').length
+      const pendingCount = this.eventList.filter(item => item.status === '0').length
+      const ignoredCount = this.eventList.filter(item => item.status === '2').length
+      return [
+        { label: '规则总数', value: String(this.ruleList.length), desc: '当前筛选结果中的规则数量' },
+        { label: '启用规则', value: String(enabledCount), desc: '处于启用状态，会持续参与评估' },
+        { label: '未处理提醒', value: String(pendingCount), desc: '建议优先处理当天未读事件', className: pendingCount ? 'finance-profit-up' : '' },
+        { label: '已忽略事件', value: String(ignoredCount), desc: '方便后续回头复盘忽略原因' }
+      ]
+    }
+  },
   created() {
     this.getBaseOptions()
     this.getRuleList()
     this.getEventList()
   },
   methods: {
+    refreshAll() {
+      this.getRuleList()
+      this.getEventList()
+    },
     getBaseOptions() {
       familyOptions().then(response => {
         this.familyOptions = response.data || []
@@ -344,8 +408,8 @@ export default {
       const map = { '0': '未处理', '1': '已读', '2': '忽略' }
       return map[value] || value
     },
-    statusType(value) {
-      const map = { '0': 'danger', '1': 'success', '2': 'info' }
+    eventStatusClass(value) {
+      const map = { '0': 'is-danger', '1': 'is-success', '2': '' }
       return map[value] || ''
     }
   }
@@ -353,23 +417,9 @@ export default {
 </script>
 
 <style scoped>
-.finance-alert {
-  background: linear-gradient(180deg, #f7fafc 0%, #f4f7fb 100%);
-}
-
-.panel-card {
-  border-radius: 16px;
-}
-
-.panel-header {
+.finance-alert ::v-deep .el-radio-group {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
-}
-
-.subtle-text {
-  color: #7a8597;
-  font-size: 12px;
 }
 </style>
