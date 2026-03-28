@@ -16,7 +16,7 @@
 
     <template v-else>
       <el-row :gutter="16" class="finance-summary-grid">
-        <el-col :xs="24" :sm="12" :lg="3" v-for="item in summaryCards" :key="item.label">
+        <el-col :xs="24" :sm="12" :lg="6" v-for="item in summaryCards" :key="item.label">
           <el-card shadow="never" class="finance-summary-card">
             <div class="finance-summary-card__label">{{ item.label }}</div>
             <div class="finance-summary-card__value" :class="item.className">{{ item.value }}</div>
