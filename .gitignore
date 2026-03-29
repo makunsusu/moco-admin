@@ -19,6 +19,10 @@ moco-ui/coverage/
 moco-ui/.eslintcache
 moco-ui/.stylelintcache
 moco-ui/.cache/
+tools/**/node_modules/
+tools/**/mijia-session.json
+tools/**/__pycache__/
+tools/**/.playwright-mijia-profile/
 
 # Package manager logs
 npm-debug.log*

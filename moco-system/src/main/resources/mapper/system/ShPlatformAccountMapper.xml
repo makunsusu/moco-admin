@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.ShPlatformAccountMapper">
+
+    <resultMap type="ShPlatformAccount" id="ShPlatformAccountResult">
+        <id property="accountId" column="account_id"/>
+        <result property="platformCode" column="platform_code"/>
+        <result property="platformName" column="platform_name"/>
+        <result property="username" column="username"/>
+        <result property="authMode" column="auth_mode"/>
+        <result property="encryptedPassword" column="encrypted_password"/>
+        <result property="mijiaUserId" column="mijia_user_id"/>
+        <result property="encryptedSsecurity" column="encrypted_ssecurity"/>
+        <result property="encryptedServiceToken" column="encrypted_service_token"/>
+        <result property="encryptedAccessToken" column="encrypted_access_token"/>
+        <result property="encryptedRefreshToken" column="encrypted_refresh_token"/>
+        <result property="oauthExpiresTs" column="oauth_expires_ts"/>
+        <result property="oauthClientId" column="oauth_client_id"/>
+        <result property="oauthRedirectUri" column="oauth_redirect_uri"/>
+        <result property="region" column="region"/>
+        <result property="syncEnabled" column="sync_enabled"/>
+        <result property="status" column="status"/>
+        <result property="lastSyncTime" column="last_sync_time"/>
+        <result property="lastSyncStatus" column="last_sync_status"/>
+        <result property="lastSyncMessage" column="last_sync_message"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectPlatformAccountVo">
+        select account_id, platform_code, platform_name, username, auth_mode, encrypted_password, mijia_user_id,
+               encrypted_ssecurity, encrypted_service_token, encrypted_access_token, encrypted_refresh_token,
+               oauth_expires_ts, oauth_client_id, oauth_redirect_uri, region, sync_enabled, status, last_sync_time,
+               last_sync_status, last_sync_message, create_by, create_time, update_by, update_time, remark
+        from sh_platform_account
+    </sql>
+
+    <select id="selectPlatformAccount" resultMap="ShPlatformAccountResult">
+        <include refid="selectPlatformAccountVo"/>
+        order by account_id desc
+        limit 1
+    </select>
+
+    <insert id="insertPlatformAccount" parameterType="ShPlatformAccount" useGeneratedKeys="true" keyProperty="accountId">
+        insert into sh_platform_account(
+            platform_code, platform_name, username, auth_mode, encrypted_password, mijia_user_id, encrypted_ssecurity,
+            encrypted_service_token, encrypted_access_token, encrypted_refresh_token, oauth_expires_ts, oauth_client_id, oauth_redirect_uri,
+            region, sync_enabled, status, last_sync_time, last_sync_status,
+            last_sync_message, remark, create_by, create_time
+        ) values (
+            #{platformCode}, #{platformName}, #{username}, #{authMode}, #{encryptedPassword}, #{mijiaUserId},
+            #{encryptedSsecurity}, #{encryptedServiceToken}, #{encryptedAccessToken}, #{encryptedRefreshToken},
+            #{oauthExpiresTs}, #{oauthClientId}, #{oauthRedirectUri}, #{region}, #{syncEnabled}, #{status}, #{lastSyncTime},
+            #{lastSyncStatus}, #{lastSyncMessage}, #{remark}, #{createBy}, sysdate()
+        )
+    </insert>
+
+    <update id="updatePlatformAccount" parameterType="ShPlatformAccount">
+        update sh_platform_account
+        <set>
+            <if test="platformCode != null and platformCode != ''">platform_code = #{platformCode},</if>
+            <if test="platformName != null and platformName != ''">platform_name = #{platformName},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="authMode != null and authMode != ''">auth_mode = #{authMode},</if>
+            <if test="encryptedPassword != null and encryptedPassword != ''">encrypted_password = #{encryptedPassword},</if>
+            <if test="mijiaUserId != null">mijia_user_id = #{mijiaUserId},</if>
+            <if test="encryptedSsecurity != null and encryptedSsecurity != ''">encrypted_ssecurity = #{encryptedSsecurity},</if>
+            <if test="encryptedServiceToken != null and encryptedServiceToken != ''">encrypted_service_token = #{encryptedServiceToken},</if>
+            <if test="encryptedAccessToken != null">encrypted_access_token = #{encryptedAccessToken},</if>
+            <if test="encryptedRefreshToken != null">encrypted_refresh_token = #{encryptedRefreshToken},</if>
+            <if test="oauthExpiresTs != null">oauth_expires_ts = #{oauthExpiresTs},</if>
+            <if test="oauthClientId != null">oauth_client_id = #{oauthClientId},</if>
+            <if test="oauthRedirectUri != null">oauth_redirect_uri = #{oauthRedirectUri},</if>
+            <if test="region != null and region != ''">region = #{region},</if>
+            <if test="syncEnabled != null and syncEnabled != ''">sync_enabled = #{syncEnabled},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="lastSyncTime != null">last_sync_time = #{lastSyncTime},</if>
+            <if test="lastSyncStatus != null">last_sync_status = #{lastSyncStatus},</if>
+            <if test="lastSyncMessage != null">last_sync_message = #{lastSyncMessage},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where account_id = #{accountId}
+    </update>
+
+</mapper>

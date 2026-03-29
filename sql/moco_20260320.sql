@@ -187,6 +187,10 @@ insert into sys_menu values('116',  '代码生成', '3',   '2', 'gen',        't
 insert into sys_menu values('117',  '系统接口', '3',   '3', 'swagger',    'tool/swagger/index',       '', '', 1, 0, 'C', '0', '0', 'tool:swagger:list',       'swagger',       'admin', sysdate(), '', null, '系统接口菜单');
 insert into sys_menu values('2000', '理财大师', '0',   '5', 'finance',    null,                       '', '', 1, 0, 'M', '0', '0', '',                        'money',         'admin', sysdate(), '', null, '理财大师目录');
 insert into sys_menu values('2001', '交易市场管理', '2000', '1', 'market', 'finance/market/index',   '', '', 1, 0, 'C', '0', '0', 'finance:market:list',     'chart',         'admin', sysdate(), '', null, '交易市场管理菜单');
+insert into sys_menu values('2100', '智能家居', '0',   '6', 'smarthome',  null,                       '', '', 1, 0, 'M', '0', '0', '',                        'dashboard',     'admin', sysdate(), '', null, '智能家居目录');
+insert into sys_menu values('2101', '平台接入', '2100', '1', 'platform',   'smarthome/platform/index', '', '', 1, 0, 'C', '0', '0', 'smarthome:platform:query', 'edit',          'admin', sysdate(), '', null, '平台接入菜单');
+insert into sys_menu values('2103', '设备工作台', '2100', '2', 'device',   'smarthome/device/index',   '', '', 1, 0, 'C', '0', '0', 'smarthome:device:list',   'list',          'admin', sysdate(), '', null, '设备工作台菜单');
+insert into sys_menu values('2104', '同步日志', '2100', '3', 'log',        'smarthome/log/index',      '', '', 1, 0, 'C', '0', '0', 'smarthome:log:list',      'job',           'admin', sysdate(), '', null, '同步日志菜单');
 -- 三级菜单
 insert into sys_menu values('500',  '操作日志', '108', '1', 'operlog',    'monitor/operlog/index',    '', '', 1, 0, 'C', '0', '0', 'monitor:operlog:list',    'form',          'admin', sysdate(), '', null, '操作日志菜单');
 insert into sys_menu values('501',  '登录日志', '108', '2', 'logininfor', 'monitor/logininfor/index', '', '', 1, 0, 'C', '0', '0', 'monitor:logininfor:list', 'logininfor',    'admin', sysdate(), '', null, '登录日志菜单');
@@ -269,6 +273,13 @@ insert into sys_menu values('2003', '市场新增', '2001', '2', '#', '', '', ''
 insert into sys_menu values('2004', '市场修改', '2001', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:edit',       '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('2005', '市场删除', '2001', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:remove',     '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('2006', '市场导出', '2001', '5', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:export',     '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2110', '平台查询', '2101', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'smarthome:platform:query',  '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2111', '平台修改', '2101', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'smarthome:platform:edit',   '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2112', '测试连接', '2101', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'smarthome:platform:sync',   '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2113', '手动同步', '2101', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'smarthome:platform:sync',   '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2116', '设备列表', '2103', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'smarthome:device:list',     '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2117', '设备详情', '2103', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'smarthome:device:query',    '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('2118', '日志查询', '2104', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'smarthome:log:list',        '#', 'admin', sysdate(), '', null, '');
 
 
 -- ----------------------------
@@ -393,6 +404,17 @@ insert into sys_role_menu values ('2', '2003');
 insert into sys_role_menu values ('2', '2004');
 insert into sys_role_menu values ('2', '2005');
 insert into sys_role_menu values ('2', '2006');
+insert into sys_role_menu values ('2', '2100');
+insert into sys_role_menu values ('2', '2101');
+insert into sys_role_menu values ('2', '2103');
+insert into sys_role_menu values ('2', '2104');
+insert into sys_role_menu values ('2', '2110');
+insert into sys_role_menu values ('2', '2111');
+insert into sys_role_menu values ('2', '2112');
+insert into sys_role_menu values ('2', '2113');
+insert into sys_role_menu values ('2', '2116');
+insert into sys_role_menu values ('2', '2117');
+insert into sys_role_menu values ('2', '2118');
 
 -- ----------------------------
 -- 8、角色和部门关联表  角色1-N部门
@@ -616,6 +638,8 @@ create table sys_job (
 insert into sys_job values(1, '系统默认（无参）', 'DEFAULT', 'mocoTask.mocoNoParams',        '0/10 * * * * ?', '3', '1', '1', 'admin', sysdate(), '', null, '');
 insert into sys_job values(2, '系统默认（有参）', 'DEFAULT', 'mocoTask.mocoParams(\'moco\')',  '0/15 * * * * ?', '3', '1', '1', 'admin', sysdate(), '', null, '');
 insert into sys_job values(3, '系统默认（多参）', 'DEFAULT', 'mocoTask.mocoMultipleParams(\'moco\', true, 2000L, 316.50D, 100)',  '0/20 * * * * ?', '3', '1', '1', 'admin', sysdate(), '', null, '');
+insert into sys_job values(101, '米家设备状态刷新', 'DEFAULT', 'smarthomeTask.syncDeviceStatus', '0 0/10 * * * ?', '3', '1', '1', 'admin', sysdate(), '', null, '智能家居设备状态定时刷新');
+insert into sys_job values(102, '米家全量快照同步', 'DEFAULT', 'smarthomeTask.syncFullSnapshot', '0 0 3 * * ?', '3', '1', '1', 'admin', sysdate(), '', null, '智能家居家庭/房间/设备全量同步');
 
 
 -- ----------------------------
@@ -703,7 +727,154 @@ insert into fin_market values (10,'HKEX', '香港交易及结算所有限公司'
 
 
 -- ----------------------------
--- 19、公告已读记录表
+-- 19、智能家居平台账号表
+-- ----------------------------
+drop table if exists sh_platform_account;
+create table sh_platform_account (
+  account_id         bigint(20)      not null auto_increment    comment '平台账号ID',
+  platform_code      varchar(30)     not null                   comment '平台编码',
+  platform_name      varchar(50)     not null                   comment '平台名称',
+  username           varchar(100)    default ''                 comment '登录账号',
+  auth_mode          varchar(20)     default 'PASSWORD'         comment '接入方式（PASSWORD/TOKEN/OAUTH）',
+  encrypted_password varchar(255)    default ''                 comment '加密密码',
+  mijia_user_id      varchar(100)    default ''                 comment '米家 userId',
+  encrypted_ssecurity varchar(500)   default ''                 comment '加密 ssecurity',
+  encrypted_service_token varchar(1000) default ''              comment '加密 serviceToken',
+  encrypted_access_token varchar(2000) default ''               comment '加密 accessToken',
+  encrypted_refresh_token varchar(2000) default ''              comment '加密 refreshToken',
+  oauth_expires_ts   bigint(20)      default null               comment 'OAuth 过期时间戳',
+  oauth_client_id    varchar(100)    default ''                 comment 'OAuth Client ID',
+  oauth_redirect_uri varchar(500)    default ''                 comment 'OAuth 回调地址',
+  region             varchar(20)     default 'cn'               comment '地区',
+  sync_enabled       char(1)         default '0'                comment '同步开关（1启用 0关闭）',
+  status             char(1)         default '0'                comment '状态（0正常 1停用）',
+  last_sync_time     datetime                                   comment '最近同步时间',
+  last_sync_status   varchar(20)     default ''                 comment '最近同步状态',
+  last_sync_message  varchar(500)    default ''                 comment '最近同步摘要',
+  create_by          varchar(64)     default ''                 comment '创建者',
+  create_time        datetime                                   comment '创建时间',
+  update_by          varchar(64)     default ''                 comment '更新者',
+  update_time        datetime                                   comment '更新时间',
+  remark             varchar(500)    default null               comment '备注',
+  primary key (account_id)
+) engine=innodb auto_increment=1 comment = '智能家居平台账号表';
+
+
+-- ----------------------------
+-- 20、智能家居家庭表
+-- ----------------------------
+drop table if exists sh_home;
+create table sh_home (
+  home_id            bigint(20)      not null auto_increment    comment '家庭ID',
+  platform_code      varchar(30)     not null                   comment '平台编码',
+  cloud_home_id      varchar(64)     not null                   comment '云端家庭ID',
+  home_name          varchar(100)    not null                   comment '家庭名称',
+  region             varchar(20)     default 'cn'               comment '地区',
+  room_count         int(11)         default 0                  comment '房间数量',
+  device_count       int(11)         default 0                  comment '设备数量',
+  status             char(1)         default '0'                comment '状态（0正常 1停用）',
+  last_sync_time     datetime                                   comment '最近同步时间',
+  create_by          varchar(64)     default ''                 comment '创建者',
+  create_time        datetime                                   comment '创建时间',
+  update_by          varchar(64)     default ''                 comment '更新者',
+  update_time        datetime                                   comment '更新时间',
+  remark             varchar(500)    default null               comment '备注',
+  primary key (home_id),
+  unique key uk_sh_home_cloud_id (cloud_home_id)
+) engine=innodb auto_increment=1 comment = '智能家居家庭表';
+
+
+-- ----------------------------
+-- 21、智能家居房间表
+-- ----------------------------
+drop table if exists sh_room;
+create table sh_room (
+  room_id            bigint(20)      not null auto_increment    comment '房间ID',
+  home_id            bigint(20)                                 comment '家庭ID',
+  home_name          varchar(100)    default ''                 comment '家庭名称',
+  cloud_room_id      varchar(64)     not null                   comment '云端房间ID',
+  room_name          varchar(100)    not null                   comment '房间名称',
+  device_count       int(11)         default 0                  comment '设备数量',
+  status             char(1)         default '0'                comment '状态（0正常 1停用）',
+  last_sync_time     datetime                                   comment '最近同步时间',
+  create_by          varchar(64)     default ''                 comment '创建者',
+  create_time        datetime                                   comment '创建时间',
+  update_by          varchar(64)     default ''                 comment '更新者',
+  update_time        datetime                                   comment '更新时间',
+  remark             varchar(500)    default null               comment '备注',
+  primary key (room_id),
+  unique key uk_sh_room_cloud_id (cloud_room_id)
+) engine=innodb auto_increment=1 comment = '智能家居房间表';
+
+
+-- ----------------------------
+-- 22、智能家居设备表
+-- ----------------------------
+drop table if exists sh_device;
+create table sh_device (
+  device_id          bigint(20)      not null auto_increment    comment '设备ID',
+  home_id            bigint(20)                                 comment '家庭ID',
+  room_id            bigint(20)                                 comment '房间ID',
+  home_name          varchar(100)    default ''                 comment '家庭名称',
+  room_name          varchar(100)    default ''                 comment '房间名称',
+  did                varchar(64)     not null                   comment '米家设备DID',
+  uid                varchar(64)     default ''                 comment '用户UID',
+  device_name        varchar(100)    not null                   comment '设备名称',
+  model              varchar(100)    default ''                 comment '设备型号',
+  device_type        varchar(50)     default ''                 comment '设备类型',
+  online_status      char(1)         default '0'                comment '在线状态（1在线 0离线）',
+  power_status       varchar(20)     default 'UNKNOWN'          comment '开关状态',
+  region             varchar(20)     default 'cn'               comment '地区',
+  raw_payload        longtext                                    comment '原始返回快照',
+  last_sync_time     datetime                                   comment '最近同步时间',
+  create_by          varchar(64)     default ''                 comment '创建者',
+  create_time        datetime                                   comment '创建时间',
+  update_by          varchar(64)     default ''                 comment '更新者',
+  update_time        datetime                                   comment '更新时间',
+  remark             varchar(500)    default null               comment '备注',
+  primary key (device_id),
+  unique key uk_sh_device_did (did)
+) engine=innodb auto_increment=1 comment = '智能家居设备表';
+
+
+-- ----------------------------
+-- 23、智能家居设备属性快照表
+-- ----------------------------
+drop table if exists sh_device_property;
+create table sh_device_property (
+  property_id        bigint(20)      not null auto_increment    comment '属性ID',
+  device_id          bigint(20)      not null                   comment '设备ID',
+  property_key       varchar(255)    not null                   comment '属性键',
+  property_value     text                                        comment '属性值',
+  property_type      varchar(30)     default 'STRING'           comment '属性类型',
+  snapshot_time      datetime                                   comment '快照时间',
+  primary key (property_id),
+  key idx_sh_property_device_id (device_id)
+) engine=innodb auto_increment=1 comment = '智能家居设备属性快照表';
+
+
+-- ----------------------------
+-- 24、智能家居同步日志表
+-- ----------------------------
+drop table if exists sh_sync_log;
+create table sh_sync_log (
+  log_id             bigint(20)      not null auto_increment    comment '日志ID',
+  platform_code      varchar(30)     not null                   comment '平台编码',
+  sync_type          varchar(30)     not null                   comment '同步类型',
+  trigger_mode       varchar(30)     not null                   comment '触发方式',
+  sync_status        varchar(20)     default ''                 comment '执行状态',
+  success_count      int(11)         default 0                  comment '成功数量',
+  fail_count         int(11)         default 0                  comment '失败数量',
+  error_message      varchar(1000)   default ''                 comment '错误摘要',
+  detail_json        longtext                                    comment '明细JSON',
+  start_time         datetime                                   comment '开始时间',
+  end_time           datetime                                   comment '结束时间',
+  primary key (log_id)
+) engine=innodb auto_increment=1 comment = '智能家居同步日志表';
+
+
+-- ----------------------------
+-- 25、公告已读记录表
 -- ----------------------------
 drop table if exists sys_notice_read;
 create table sys_notice_read (

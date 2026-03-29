@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.ShDeviceMapper">
+
+    <resultMap type="ShDevice" id="ShDeviceResult">
+        <id property="deviceId" column="device_id"/>
+        <result property="homeId" column="home_id"/>
+        <result property="roomId" column="room_id"/>
+        <result property="homeName" column="home_name"/>
+        <result property="roomName" column="room_name"/>
+        <result property="did" column="did"/>
+        <result property="uid" column="uid"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="model" column="model"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="onlineStatus" column="online_status"/>
+        <result property="powerStatus" column="power_status"/>
+        <result property="region" column="region"/>
+        <result property="rawPayload" column="raw_payload"/>
+        <result property="lastSyncTime" column="last_sync_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectDeviceVo">
+        select device_id, home_id, room_id, home_name, room_name, did, uid, device_name, model,
+               device_type, online_status, power_status, region, raw_payload, last_sync_time,
+               create_by, create_time, update_by, update_time, remark
+        from sh_device
+    </sql>
+
+    <select id="selectDeviceList" parameterType="ShDevice" resultMap="ShDeviceResult">
+        <include refid="selectDeviceVo"/>
+        <where>
+            <if test="homeId != null">
+                and home_id = #{homeId}
+            </if>
+            <if test="roomId != null">
+                and room_id = #{roomId}
+            </if>
+            <if test="homeName != null and homeName != ''">
+                and home_name like concat('%', #{homeName}, '%')
+            </if>
+            <if test="roomName != null and roomName != ''">
+                and room_name like concat('%', #{roomName}, '%')
+            </if>
+            <if test="did != null and did != ''">
+                and did like concat('%', #{did}, '%')
+            </if>
+            <if test="deviceName != null and deviceName != ''">
+                and device_name like concat('%', #{deviceName}, '%')
+            </if>
+            <if test="model != null and model != ''">
+                and model like concat('%', #{model}, '%')
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                and device_type = #{deviceType}
+            </if>
+            <if test="onlineStatus != null and onlineStatus != ''">
+                and online_status = #{onlineStatus}
+            </if>
+            <if test="powerStatus != null and powerStatus != ''">
+                and power_status = #{powerStatus}
+            </if>
+        </where>
+        order by last_sync_time desc, device_id desc
+    </select>
+
+    <select id="selectDeviceById" parameterType="Long" resultMap="ShDeviceResult">
+        <include refid="selectDeviceVo"/>
+        where device_id = #{deviceId}
+    </select>
+
+    <select id="selectDeviceByDid" parameterType="String" resultMap="ShDeviceResult">
+        <include refid="selectDeviceVo"/>
+        where did = #{did}
+        limit 1
+    </select>
+
+    <insert id="insertDevice" parameterType="ShDevice" useGeneratedKeys="true" keyProperty="deviceId">
+        insert into sh_device(
+            home_id, room_id, home_name, room_name, did, uid, device_name, model, device_type,
+            online_status, power_status, region, raw_payload, last_sync_time, create_by, create_time, remark
+        ) values (
+            #{homeId}, #{roomId}, #{homeName}, #{roomName}, #{did}, #{uid}, #{deviceName}, #{model}, #{deviceType},
+            #{onlineStatus}, #{powerStatus}, #{region}, #{rawPayload}, #{lastSyncTime}, #{createBy}, sysdate(), #{remark}
+        )
+    </insert>
+
+    <update id="updateDevice" parameterType="ShDevice">
+        update sh_device
+        <set>
+            <if test="homeId != null">home_id = #{homeId},</if>
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="homeName != null">home_name = #{homeName},</if>
+            <if test="roomName != null">room_name = #{roomName},</if>
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="deviceName != null and deviceName != ''">device_name = #{deviceName},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="deviceType != null">device_type = #{deviceType},</if>
+            <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
+            <if test="powerStatus != null">power_status = #{powerStatus},</if>
+            <if test="region != null">region = #{region},</if>
+            <if test="rawPayload != null">raw_payload = #{rawPayload},</if>
+            <if test="lastSyncTime != null">last_sync_time = #{lastSyncTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where device_id = #{deviceId}
+    </update>
+
+    <update id="updateRuntimeStateByDid" parameterType="ShDevice">
+        update sh_device
+        <set>
+            <if test="uid != null and uid != ''">uid = #{uid},</if>
+            <if test="homeName != null and homeName != ''">home_name = #{homeName},</if>
+            <if test="roomName != null and roomName != ''">room_name = #{roomName},</if>
+            <if test="deviceName != null and deviceName != ''">device_name = #{deviceName},</if>
+            <if test="model != null and model != ''">model = #{model},</if>
+            <if test="deviceType != null and deviceType != ''">device_type = #{deviceType},</if>
+            <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
+            <if test="powerStatus != null">power_status = #{powerStatus},</if>
+            <if test="rawPayload != null">raw_payload = #{rawPayload},</if>
+            <if test="lastSyncTime != null">last_sync_time = #{lastSyncTime},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where did = #{did}
+    </update>
+
+    <delete id="deleteAllDevices">
+        delete from sh_device
+    </delete>
+
+</mapper>

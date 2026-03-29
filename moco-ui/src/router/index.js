@@ -167,6 +167,20 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
+  },
+  {
+    path: '/smarthome/device-detail',
+    component: Layout,
+    hidden: true,
+    permissions: ['smarthome:device:query'],
+    children: [
+      {
+        path: 'index/:deviceId(\\d+)',
+        component: () => import('@/views/smarthome/device/detail'),
+        name: 'SmarthomeDeviceDetail',
+        meta: { title: '设备详情', activeMenu: '/smarthome/device' }
+      }
+    ]
   }
 ]
 

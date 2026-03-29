@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.ShSyncLogMapper">
+
+    <resultMap type="ShSyncLog" id="ShSyncLogResult">
+        <id property="logId" column="log_id"/>
+        <result property="platformCode" column="platform_code"/>
+        <result property="syncType" column="sync_type"/>
+        <result property="triggerMode" column="trigger_mode"/>
+        <result property="syncStatus" column="sync_status"/>
+        <result property="successCount" column="success_count"/>
+        <result property="failCount" column="fail_count"/>
+        <result property="errorMessage" column="error_message"/>
+        <result property="detailJson" column="detail_json"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+    </resultMap>
+
+    <sql id="selectSyncLogVo">
+        select log_id, platform_code, sync_type, trigger_mode, sync_status, success_count, fail_count,
+               error_message, detail_json, start_time, end_time
+        from sh_sync_log
+    </sql>
+
+    <select id="selectSyncLogList" parameterType="ShSyncLog" resultMap="ShSyncLogResult">
+        <include refid="selectSyncLogVo"/>
+        <where>
+            <if test="platformCode != null and platformCode != ''">
+                and platform_code = #{platformCode}
+            </if>
+            <if test="syncType != null and syncType != ''">
+                and sync_type = #{syncType}
+            </if>
+            <if test="triggerMode != null and triggerMode != ''">
+                and trigger_mode = #{triggerMode}
+            </if>
+            <if test="syncStatus != null and syncStatus != ''">
+                and sync_status = #{syncStatus}
+            </if>
+        </where>
+        order by log_id desc
+    </select>
+
+    <select id="selectRecentLogsByDeviceId" parameterType="Long" resultMap="ShSyncLogResult">
+        <include refid="selectSyncLogVo"/>
+        order by log_id desc
+        limit 10
+    </select>
+
+    <insert id="insertSyncLog" parameterType="ShSyncLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into sh_sync_log(
+            platform_code, sync_type, trigger_mode, sync_status, success_count, fail_count,
+            error_message, detail_json, start_time, end_time
+        ) values (
+            #{platformCode}, #{syncType}, #{triggerMode}, #{syncStatus}, #{successCount}, #{failCount},
+            #{errorMessage}, #{detailJson}, #{startTime}, #{endTime}
+        )
+    </insert>
+
+</mapper>

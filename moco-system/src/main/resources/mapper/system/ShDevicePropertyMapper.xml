@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moco.system.mapper.ShDevicePropertyMapper">
+
+    <resultMap type="ShDeviceProperty" id="ShDevicePropertyResult">
+        <id property="propertyId" column="property_id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="propertyKey" column="property_key"/>
+        <result property="propertyValue" column="property_value"/>
+        <result property="propertyType" column="property_type"/>
+        <result property="snapshotTime" column="snapshot_time"/>
+    </resultMap>
+
+    <select id="selectPropertyListByDeviceId" parameterType="Long" resultMap="ShDevicePropertyResult">
+        select property_id, device_id, property_key, property_value, property_type, snapshot_time
+        from sh_device_property
+        where device_id = #{deviceId}
+        order by property_key asc
+    </select>
+
+    <insert id="insertDeviceProperty" parameterType="ShDeviceProperty" useGeneratedKeys="true" keyProperty="propertyId">
+        insert into sh_device_property(device_id, property_key, property_value, property_type, snapshot_time)
+        values (#{deviceId}, #{propertyKey}, #{propertyValue}, #{propertyType}, #{snapshotTime})
+    </insert>
+
+    <delete id="deletePropertyByDeviceId" parameterType="Long">
+        delete from sh_device_property where device_id = #{deviceId}
+    </delete>
+
+    <delete id="deleteAllProperties">
+        delete from sh_device_property
+    </delete>
+
+</mapper>
