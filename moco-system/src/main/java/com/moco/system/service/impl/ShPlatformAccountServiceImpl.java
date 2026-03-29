@@ -2,7 +2,6 @@ package com.moco.system.service.impl;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -20,6 +19,7 @@ import com.moco.system.domain.ShSyncLog;
 import com.moco.system.mapper.ShPlatformAccountMapper;
 import com.moco.system.mapper.ShSyncLogMapper;
 import com.moco.system.service.IShPlatformAccountService;
+import com.moco.system.service.smarthome.MijiaBridgeSupport;
 import com.moco.system.service.smarthome.MijiaClient;
 import com.moco.system.service.smarthome.MijiaClientException;
 import com.moco.system.service.smarthome.MijiaCloudClient;
@@ -29,12 +29,6 @@ import com.moco.system.service.smarthome.MijiaDeviceRecord;
 @Service
 public class ShPlatformAccountServiceImpl implements IShPlatformAccountService
 {
-    private static final String LOCAL_PYTHON = "python3.10";
-
-    private static final String LOCAL_QR_START_SCRIPT = Paths.get("tools", "mijia-local-bridge", "start_qr_login.py").toAbsolutePath().toString();
-
-    private static final String LOCAL_QR_POLL_SCRIPT = Paths.get("tools", "mijia-local-bridge", "poll_qr_login.py").toAbsolutePath().toString();
-
     private static final String OAUTH_AUTH_URL = "https://account.xiaomi.com/oauth2/authorize";
 
     private static final Map<String, PendingOauthContext> PENDING_OAUTH = new ConcurrentHashMap<>();
@@ -50,6 +44,9 @@ public class ShPlatformAccountServiceImpl implements IShPlatformAccountService
 
     @Autowired
     private MijiaClient mijiaClient;
+
+    @Autowired
+    private MijiaBridgeSupport bridgeSupport;
 
     @Override
     public ShPlatformAccount getPlatformAccount()
@@ -216,7 +213,7 @@ public class ShPlatformAccountServiceImpl implements IShPlatformAccountService
     @Override
     public Map<String, Object> startLocalQrLogin()
     {
-        return runLocalQrScript(LOCAL_QR_START_SCRIPT);
+        return runLocalQrScript("start_qr_login.py");
     }
 
     @Override
@@ -226,7 +223,7 @@ public class ShPlatformAccountServiceImpl implements IShPlatformAccountService
         {
             throw new MijiaClientException("二维码会话标识不能为空");
         }
-        Map<String, Object> result = runLocalQrScript(LOCAL_QR_POLL_SCRIPT, sessionId.trim());
+        Map<String, Object> result = runLocalQrScript("poll_qr_login.py", sessionId.trim());
         if ("success".equals(String.valueOf(result.get("status"))))
         {
             ShPlatformAccount account = accountMapper.selectPlatformAccount();
@@ -300,8 +297,19 @@ public class ShPlatformAccountServiceImpl implements IShPlatformAccountService
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> syncFull(String operator)
     {
-        ShPlatformAccount account = requireConfiguredAccount();
-        ShSyncLog log = buildLog("FULL_SYNC", "MANUAL");
+        return syncFullInternal(false, operator);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> syncFullScheduled()
+    {
+        return syncFullInternal(true, "task");
+    }
+
+    private Map<String, Object> syncFullInternal(boolean scheduledTrigger, String operator)
+    {
+        ShPlatformAccount account = scheduledTrigger ? requireScheduledAccount() : requireConfiguredAccount();
+        ShSyncLog log = buildLog("FULL_SYNC", scheduledTrigger ? "SCHEDULED" : "MANUAL");
         try
         {
             List<MijiaDeviceRecord> records = mijiaClient.fetchDevices(account);
@@ -411,13 +419,13 @@ public class ShPlatformAccountServiceImpl implements IShPlatformAccountService
         return account;
     }
 
-    private Map<String, Object> runLocalQrScript(String scriptPath, String... args)
+    private Map<String, Object> runLocalQrScript(String scriptName, String... args)
     {
         try
         {
             List<String> command = new java.util.ArrayList<>();
-            command.add(LOCAL_PYTHON);
-            command.add(scriptPath);
+            command.add(bridgeSupport.getLocalPython());
+            command.add(bridgeSupport.resolveScript(scriptName));
             if (args != null)
             {
                 for (String arg : args)

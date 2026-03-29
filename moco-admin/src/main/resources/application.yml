@@ -12,6 +12,13 @@ moco:
   addressEnabled: false
   # 验证码类型 math 数字计算 char 字符验证
   captchaType: math
+  smarthome:
+    # 米家敏感字段加密密钥，生产环境务必通过环境变量覆盖
+    crypto-secret: ${MOCO_MIJIA_CRYPTO_SECRET:${token.secret}}
+    # 本机桥接脚本使用的 Python 命令
+    local-python: ${MOCO_MIJIA_LOCAL_PYTHON:python3}
+    # 本机桥接脚本目录，可按部署环境覆盖为绝对路径
+    bridge-dir: ${MOCO_MIJIA_BRIDGE_DIR:tools/mijia-local-bridge}
 
 # 开发环境配置
 server:

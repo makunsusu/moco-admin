@@ -21,6 +21,7 @@ moco-ui/.stylelintcache
 moco-ui/.cache/
 tools/**/node_modules/
 tools/**/mijia-session.json
+tools/**/.qr-sessions/
 tools/**/__pycache__/
 tools/**/.playwright-mijia-profile/
 

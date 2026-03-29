@@ -45,7 +45,7 @@ public class ShDeviceServiceImpl implements IShDeviceService
         ShDeviceDetailVO detail = new ShDeviceDetailVO();
         detail.setDevice(deviceMapper.selectDeviceById(deviceId));
         detail.setPropertyList(propertyMapper.selectPropertyListByDeviceId(deviceId));
-        detail.setRecentLogs(syncLogMapper.selectRecentLogsByDeviceId(deviceId));
+        detail.setRecentLogs(syncLogMapper.selectRecentLogs());
         return detail;
     }
 

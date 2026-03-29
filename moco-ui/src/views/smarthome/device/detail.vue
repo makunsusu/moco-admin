@@ -10,7 +10,7 @@
             </div>
             <h1 class="smart-home-title">{{ device.deviceName || '设备详情' }}</h1>
             <div class="smart-home-subtitle">
-              在一个页面里查看设备位置、状态、属性快照和最近同步记录，适合排查设备状态异常或做快捷控制。
+              在一个页面里查看设备位置、状态、属性快照和平台最近同步记录，适合排查设备状态异常或做快捷控制。
             </div>
           </div>
           <div class="smart-home-actions">
@@ -114,8 +114,8 @@
               <el-card shadow="never" class="smart-home-panel">
                 <div class="smart-home-panel__header">
                   <div>
-                    <div class="smart-home-panel__title">最近同步记录</div>
-                    <div class="smart-home-panel__desc">帮助你确认是全量同步、状态同步还是手动控制触发。</div>
+                    <div class="smart-home-panel__title">最近平台同步记录</div>
+                    <div class="smart-home-panel__desc">展示平台最近的同步结果，便于结合当前设备状态排查问题。</div>
                   </div>
                 </div>
                 <el-table :data="recentLogs" max-height="300">

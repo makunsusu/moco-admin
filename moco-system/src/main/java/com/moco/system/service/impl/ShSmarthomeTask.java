@@ -29,7 +29,7 @@ public class ShSmarthomeTask
         try
         {
             Map<String, Object> result = "全量快照同步".equals(taskName)
-                ? platformAccountService.syncFull("task")
+                ? platformAccountService.syncFullScheduled()
                 : platformAccountService.syncDeviceStatus(triggerMode);
             log.info("{}完成: {}", taskName, result);
         }

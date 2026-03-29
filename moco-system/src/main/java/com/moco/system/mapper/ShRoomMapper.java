@@ -1,6 +1,7 @@
 package com.moco.system.mapper;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 import com.moco.system.domain.ShRoom;
 
 public interface ShRoomMapper
@@ -11,7 +12,7 @@ public interface ShRoomMapper
 
     public int updateRoom(ShRoom room);
 
-    public ShRoom selectRoomByCloudRoomId(String cloudRoomId);
+    public ShRoom selectRoomByHomeIdAndCloudRoomId(@Param("homeId") Long homeId, @Param("cloudRoomId") String cloudRoomId);
 
     public int deleteAllRooms();
 }

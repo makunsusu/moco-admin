@@ -7,7 +7,7 @@ public interface ShSyncLogMapper
 {
     public List<ShSyncLog> selectSyncLogList(ShSyncLog log);
 
-    public List<ShSyncLog> selectRecentLogsByDeviceId(Long deviceId);
+    public List<ShSyncLog> selectRecentLogs();
 
     public int insertSyncLog(ShSyncLog log);
 }

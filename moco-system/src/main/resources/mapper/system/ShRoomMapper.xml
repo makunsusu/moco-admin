@@ -45,9 +45,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by room_id desc
     </select>
 
-    <select id="selectRoomByCloudRoomId" parameterType="String" resultMap="ShRoomResult">
+    <select id="selectRoomByHomeIdAndCloudRoomId" resultMap="ShRoomResult">
         <include refid="selectRoomVo"/>
-        where cloud_room_id = #{cloudRoomId}
+        where home_id = #{homeId}
+          and cloud_room_id = #{cloudRoomId}
         limit 1
     </select>
 

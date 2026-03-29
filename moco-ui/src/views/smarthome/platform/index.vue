@@ -26,7 +26,7 @@
         <el-card shadow="hover">
           <div slot="header">同步开关</div>
           <div class="smart-summary__value">{{ form.syncEnabled === '1' ? '已启用' : '已关闭' }}</div>
-          <div class="smart-summary__desc">只影响定时任务，不影响手动测试与同步</div>
+          <div class="smart-summary__desc">影响定时状态刷新和定时全量同步，不影响手动测试与同步</div>
         </el-card>
       </el-col>
     </el-row>

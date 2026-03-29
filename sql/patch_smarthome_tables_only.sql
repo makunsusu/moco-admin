@@ -71,7 +71,7 @@ create table sh_room (
   update_time        datetime                                   comment '更新时间',
   remark             varchar(500)    default null               comment '备注',
   primary key (room_id),
-  unique key uk_sh_room_cloud_id (cloud_room_id)
+  unique key uk_sh_room_home_cloud_id (home_id, cloud_room_id)
 ) engine=innodb auto_increment=1 comment = '智能家居房间表';
 
 create table sh_device (

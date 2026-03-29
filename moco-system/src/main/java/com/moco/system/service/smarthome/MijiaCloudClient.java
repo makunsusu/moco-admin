@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.nio.file.Paths;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
@@ -42,15 +42,10 @@ public class MijiaCloudClient implements MijiaClient
 
     private static final String OAUTH_HOST = "ha.api.io.mi.com";
 
-    private static final String LOCAL_BRIDGE_SCRIPT = Paths.get("tools", "mijia-local-bridge", "list_devices.py").toAbsolutePath().toString();
-
-    private static final String LOCAL_RUNTIME_BRIDGE_SCRIPT = Paths.get("tools", "mijia-local-bridge", "poll_device_state.py").toAbsolutePath().toString();
-
-    private static final String LOCAL_SET_POWER_SCRIPT = Paths.get("tools", "mijia-local-bridge", "set_power_state.py").toAbsolutePath().toString();
-
-    private static final String LOCAL_PYTHON = "python3.10";
-
     private static final Pattern JSON_STRING_PATTERN = Pattern.compile("\"%s\"\\s*:\\s*\"((?:\\\\.|[^\"\\\\])*)\"");
+
+    @Autowired
+    private MijiaBridgeSupport bridgeSupport;
 
     @Override
     public void testConnection(ShPlatformAccount account)
@@ -124,7 +119,7 @@ public class MijiaCloudClient implements MijiaClient
         }
         if ("MIJIA_API".equals(account.getAuthMode()))
         {
-            return fetchDevicesByLocalBridge(LOCAL_RUNTIME_BRIDGE_SCRIPT);
+            return fetchDevicesByLocalBridge("poll_device_state.py");
         }
         return fetchDevices(account);
     }
@@ -139,8 +134,8 @@ public class MijiaCloudClient implements MijiaClient
         try
         {
             ProcessBuilder processBuilder = new ProcessBuilder(
-                LOCAL_PYTHON,
-                LOCAL_SET_POWER_SCRIPT,
+                bridgeSupport.getLocalPython(),
+                bridgeSupport.resolveScript("set_power_state.py"),
                 did,
                 powerOn ? "on" : "off"
             );
@@ -172,14 +167,17 @@ public class MijiaCloudClient implements MijiaClient
 
     private List<MijiaDeviceRecord> fetchDevicesByLocalBridge()
     {
-        return fetchDevicesByLocalBridge(LOCAL_BRIDGE_SCRIPT);
+        return fetchDevicesByLocalBridge("list_devices.py");
     }
 
-    private List<MijiaDeviceRecord> fetchDevicesByLocalBridge(String scriptPath)
+    private List<MijiaDeviceRecord> fetchDevicesByLocalBridge(String scriptName)
     {
         try
         {
-            ProcessBuilder processBuilder = new ProcessBuilder(LOCAL_PYTHON, scriptPath);
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                bridgeSupport.getLocalPython(),
+                bridgeSupport.resolveScript(scriptName)
+            );
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
             String output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
@@ -600,7 +598,7 @@ public class MijiaCloudClient implements MijiaClient
             .header("Host", host)
             .header("X-Client-BizId", "haapi")
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer" + accessToken)
+            .header("Authorization", "Bearer " + accessToken)
             .header("X-Client-AppId", clientId)
             .POST(HttpRequest.BodyPublishers.ofString(JSON.toJSONString(body)))
             .build());

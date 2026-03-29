@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by log_id desc
     </select>
 
-    <select id="selectRecentLogsByDeviceId" parameterType="Long" resultMap="ShSyncLogResult">
+    <select id="selectRecentLogs" resultMap="ShSyncLogResult">
         <include refid="selectSyncLogVo"/>
         order by log_id desc
         limit 10

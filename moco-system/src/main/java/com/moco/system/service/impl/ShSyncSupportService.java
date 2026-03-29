@@ -138,7 +138,7 @@ public class ShSyncSupportService
             ShRoom room = entry.getValue();
             String homeId = entry.getKey().split(":")[0];
             room.setHomeId(homeIdMap.get(homeId));
-            ShRoom exists = roomMapper.selectRoomByCloudRoomId(room.getCloudRoomId());
+            ShRoom exists = roomMapper.selectRoomByHomeIdAndCloudRoomId(room.getHomeId(), room.getCloudRoomId());
             if (exists == null)
             {
                 roomMapper.insertRoom(room);
@@ -148,7 +148,7 @@ public class ShSyncSupportService
             {
                 room.setRoomId(exists.getRoomId());
                 roomMapper.updateRoom(room);
-                exists = roomMapper.selectRoomByCloudRoomId(room.getCloudRoomId());
+                exists = roomMapper.selectRoomByHomeIdAndCloudRoomId(room.getHomeId(), room.getCloudRoomId());
             }
             roomIdMap.put(entry.getKey(), exists.getRoomId());
         }
