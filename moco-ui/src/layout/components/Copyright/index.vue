@@ -21,15 +21,18 @@ export default {
 .copyright {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  height: 36px;
-  padding: 10px 20px;
+  left: 20px;
+  right: 20px;
+  height: 42px;
+  padding: 12px 18px;
   text-align: right;
-  background-color: #f8f8f8;
-  color: #666;
-  font-size: 14px;
-  border-top: 1px solid #e7e7e7;
+  background: rgba(255, 252, 246, 0.84);
+  color: rgba(16, 37, 63, 0.66);
+  font-size: 13px;
+  border: 1px solid rgba(214, 189, 158, 0.35);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -12px 28px rgba(15, 33, 56, 0.08);
+  backdrop-filter: blur(10px);
   z-index: 999;
 }
 </style>

@@ -51,12 +51,13 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
+  padding: 6px 0 18px;
 
   &:fullscreen,
   &:-webkit-full-screen,
   &:-moz-full-screen,
   &:-ms-fullscreen {
-    background: #fff;
+    background: #fffaf2;
     overflow-y: auto;
   }
 }
@@ -64,7 +65,7 @@ export default {
 .fixed-header + .app-main {
   overflow-y: auto;
   scrollbar-gutter: auto;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 72px);
   min-height: 0px;
 }
 
@@ -73,18 +74,18 @@ export default {
 }
 
 .fixed-header + .app-main {
-  margin-top: 50px;
+  margin-top: 72px;
 }
 
 .hasTagsView {
   .app-main {
     /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px);
+    min-height: calc(100vh - 122px);
   }
 
   .fixed-header + .app-main {
-    margin-top: 84px;
-    height: calc(100vh - 84px);
+    margin-top: 122px;
+    height: calc(100vh - 122px);
     min-height: 0px;
   }
 }
@@ -110,14 +111,14 @@ export default {
       padding-bottom: max(17px, calc(constant(safe-area-inset-bottom) + 10px));
       padding-bottom: max(17px, calc(env(safe-area-inset-bottom) + 10px));
       height: calc(100svh - 50px);
-      height: calc(100dvh - 50px);
+      height: calc(100dvh - 72px);
     }
 
     .hasTagsView .fixed-header + .app-main {
       padding-bottom: max(17px, calc(constant(safe-area-inset-bottom) + 10px));
       padding-bottom: max(17px, calc(env(safe-area-inset-bottom) + 10px));
-      height: calc(100svh - 84px);
-      height: calc(100dvh - 84px);
+      height: calc(100svh - 122px);
+      height: calc(100dvh - 122px);
     }
   }
 }
@@ -130,11 +131,11 @@ export default {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #c0c0c0;
+  background: linear-gradient(180deg, rgba(240, 138, 36, 0.7), rgba(16, 37, 63, 0.34));
   border-radius: 3px;
 }
 </style>

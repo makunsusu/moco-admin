@@ -185,8 +185,6 @@ insert into sys_menu values('114',  '缓存列表', '2',   '6', 'cacheList',  'm
 insert into sys_menu values('115',  '表单构建', '3',   '1', 'build',      'tool/build/index',         '', '', 1, 0, 'C', '0', '0', 'tool:build:list',         'build',         'admin', sysdate(), '', null, '表单构建菜单');
 insert into sys_menu values('116',  '代码生成', '3',   '2', 'gen',        'tool/gen/index',           '', '', 1, 0, 'C', '0', '0', 'tool:gen:list',           'code',          'admin', sysdate(), '', null, '代码生成菜单');
 insert into sys_menu values('117',  '系统接口', '3',   '3', 'swagger',    'tool/swagger/index',       '', '', 1, 0, 'C', '0', '0', 'tool:swagger:list',       'swagger',       'admin', sysdate(), '', null, '系统接口菜单');
-insert into sys_menu values('2000', '理财大师', '0',   '5', 'finance',    null,                       '', '', 1, 0, 'M', '0', '0', '',                        'money',         'admin', sysdate(), '', null, '理财大师目录');
-insert into sys_menu values('2001', '交易市场管理', '2000', '1', 'market', 'finance/market/index',   '', '', 1, 0, 'C', '0', '0', 'finance:market:list',     'chart',         'admin', sysdate(), '', null, '交易市场管理菜单');
 -- 三级菜单
 insert into sys_menu values('500',  '操作日志', '108', '1', 'operlog',    'monitor/operlog/index',    '', '', 1, 0, 'C', '0', '0', 'monitor:operlog:list',    'form',          'admin', sysdate(), '', null, '操作日志菜单');
 insert into sys_menu values('501',  '登录日志', '108', '2', 'logininfor', 'monitor/logininfor/index', '', '', 1, 0, 'C', '0', '0', 'monitor:logininfor:list', 'logininfor',    'admin', sysdate(), '', null, '登录日志菜单');
@@ -264,12 +262,6 @@ insert into sys_menu values('1057', '生成删除', '116', '3', '#', '', '', '',
 insert into sys_menu values('1058', '导入代码', '116', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'tool:gen:import',            '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1059', '预览代码', '116', '5', '#', '', '', '', 1, 0, 'F', '0', '0', 'tool:gen:preview',           '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1060', '生成代码', '116', '6', '#', '', '', '', 1, 0, 'F', '0', '0', 'tool:gen:code',              '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2002', '市场查询', '2001', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:query',      '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2003', '市场新增', '2001', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:add',        '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2004', '市场修改', '2001', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:edit',       '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2005', '市场删除', '2001', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:remove',     '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('2006', '市场导出', '2001', '5', '#', '', '', '', 1, 0, 'F', '0', '0', 'finance:market:export',     '#', 'admin', sysdate(), '', null, '');
-
 
 -- ----------------------------
 -- 6、用户和角色关联表  用户N-1角色
@@ -386,13 +378,6 @@ insert into sys_role_menu values ('2', '1057');
 insert into sys_role_menu values ('2', '1058');
 insert into sys_role_menu values ('2', '1059');
 insert into sys_role_menu values ('2', '1060');
-insert into sys_role_menu values ('2', '2000');
-insert into sys_role_menu values ('2', '2001');
-insert into sys_role_menu values ('2', '2002');
-insert into sys_role_menu values ('2', '2003');
-insert into sys_role_menu values ('2', '2004');
-insert into sys_role_menu values ('2', '2005');
-insert into sys_role_menu values ('2', '2006');
 
 -- ----------------------------
 -- 8、角色和部门关联表  角色1-N部门

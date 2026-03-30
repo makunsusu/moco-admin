@@ -54,6 +54,26 @@
   margin: 0 auto;
 }
 
+.el-drawer {
+  background: rgba(255, 250, 242, 0.96);
+}
+
+.el-dropdown-menu {
+  border-radius: 16px;
+  border: 1px solid rgba(214, 189, 158, 0.4);
+  box-shadow: 0 22px 40px rgba(15, 33, 56, 0.14);
+}
+
+.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  background: rgba(240, 138, 36, 0.08);
+  color: #10253f;
+}
+
+.el-message-box {
+  background: rgba(255, 250, 242, 0.98);
+}
+
 // refine element ui upload
 .upload-container {
   .el-upload {

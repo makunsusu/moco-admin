@@ -57,19 +57,23 @@ export default {
 
 .sidebar-logo-container {
   position: relative;
-  height: 50px;
-  line-height: 50px;
-  background: #2b2f3a;
+  height: 64px;
+  line-height: 64px;
+  background: transparent;
   text-align: center;
   overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
   & .sidebar-logo-link {
     height: 100%;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     & .sidebar-logo {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       vertical-align: middle;
       margin-right: 12px;
     }
@@ -79,10 +83,10 @@ export default {
       margin: 0;
       color: #fff;
       font-weight: 700;
-      line-height: 50px;
+      line-height: 64px;
       font-size: 15px;
-      letter-spacing: 0.08em;
-      text-transform: lowercase;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       font-family: "Avenir Next", "Trebuchet MS", Helvetica, Arial, sans-serif;
       vertical-align: middle;
     }

@@ -425,10 +425,7 @@ export default {
 .workbench-page {
   min-height: calc(100vh - 84px);
   padding: 24px;
-  background:
-    radial-gradient(circle at top left, rgba(108, 229, 194, 0.18), transparent 28%),
-    radial-gradient(circle at 85% 18%, rgba(255, 209, 102, 0.18), transparent 24%),
-    linear-gradient(180deg, #f6fbff 0%, #eef4f8 100%);
+  background: transparent;
 }
 
 .hero-panel {
@@ -436,22 +433,23 @@ export default {
   grid-template-columns: minmax(0, 1.8fr) minmax(280px, 0.8fr);
   gap: 18px;
   padding: 28px;
-  border-radius: 28px;
-  background:
-    linear-gradient(135deg, rgba(12, 31, 48, 0.96) 0%, rgba(29, 64, 91, 0.92) 62%, rgba(41, 99, 117, 0.9) 100%);
+  border-radius: 18px;
+  background: linear-gradient(135deg, #10253f 0%, #1b4466 58%, #23587e 100%);
   color: #f5fbff;
-  box-shadow: 0 22px 50px rgba(13, 34, 49, 0.18);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.12);
   overflow: hidden;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .hero-panel::after {
   content: '';
   position: absolute;
-  inset: auto -80px -120px auto;
   width: 260px;
   height: 260px;
-  background: radial-gradient(circle, rgba(255, 209, 102, 0.26), transparent 64%);
+  right: -90px;
+  top: -90px;
+  background: radial-gradient(circle, rgba(125, 196, 255, 0.18), rgba(125, 196, 255, 0));
 }
 
 .hero-copy {
@@ -464,7 +462,7 @@ export default {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-size: 12px;
-  color: rgba(230, 247, 242, 0.82);
+  color: rgba(229, 237, 246, 0.72);
 }
 
 .hero-copy h1 {
@@ -477,7 +475,7 @@ export default {
 .hero-desc {
   max-width: 720px;
   margin: 14px 0 0;
-  color: rgba(245, 251, 255, 0.82);
+  color: rgba(231, 239, 246, 0.8);
   line-height: 1.8;
   font-size: 15px;
 }
@@ -498,10 +496,10 @@ export default {
 
 .pulse-card {
   padding: 18px 20px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.07));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .pulse-card strong {
@@ -526,10 +524,10 @@ export default {
 
 .metric-card,
 .panel {
-  border: none;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.86);
-  box-shadow: 0 18px 42px rgba(17, 39, 54, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
 }
 
 .metric-card {
@@ -545,25 +543,25 @@ export default {
   justify-content: center;
   width: 52px;
   height: 52px;
-  border-radius: 18px;
+  border-radius: 14px;
   font-size: 24px;
   color: #fff;
 }
 
 .metric-icon.mint {
-  background: linear-gradient(135deg, #19b48a, #76e2be);
+  background: linear-gradient(135deg, #2f9e83, #45b59a);
 }
 
 .metric-icon.amber {
-  background: linear-gradient(135deg, #ff9f43, #ffd166);
+  background: linear-gradient(135deg, #c27a2c, #d89a53);
 }
 
 .metric-icon.sky {
-  background: linear-gradient(135deg, #2d9cdb, #67c8ff);
+  background: linear-gradient(135deg, #2d7aa8, #4b9fd4);
 }
 
 .metric-icon.violet {
-  background: linear-gradient(135deg, #6574ff, #8f7cff);
+  background: linear-gradient(135deg, #4f6d8f, #6f8eb0);
 }
 
 .metric-copy span,
@@ -706,17 +704,18 @@ export default {
 
 .shortcut-card {
   padding: 18px;
-  border: none;
-  border-radius: 22px;
-  background: linear-gradient(180deg, #f7fbfe 0%, #eef5f8 100%);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fbfdff 0%, #f5f9fd 100%);
   text-align: left;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .shortcut-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 28px rgba(17, 39, 58, 0.08);
+  transform: translateY(-1px);
+  border-color: rgba(36, 91, 132, 0.24);
+  background: #ffffff;
 }
 
 .shortcut-card i {
@@ -726,8 +725,8 @@ export default {
   width: 44px;
   height: 44px;
   margin-bottom: 14px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #11273a, #28546a);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #163f60, #2d6d99);
   color: #fff;
   font-size: 20px;
 }
@@ -756,8 +755,9 @@ export default {
 
 .status-item {
   padding: 16px 18px;
-  border-radius: 20px;
-  background: linear-gradient(180deg, #f8fcff 0%, #edf3f7 100%);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fbfdff 0%, #f5f9fd 100%);
+  border: 1px solid rgba(226, 232, 240, 0.9);
 }
 
 .status-item span,

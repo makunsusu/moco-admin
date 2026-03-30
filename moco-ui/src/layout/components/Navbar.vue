@@ -125,18 +125,21 @@ export default {
 }
 
 .navbar {
-  height: 50px;
+  height: 58px;
   overflow: hidden;
   position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  margin: 14px 20px 0;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
   display: flex;
   align-items: center;
-  // padding: 0 8px;
+  padding: 0 12px;
   box-sizing: border-box;
 
   .hamburger-container {
-    line-height: 46px;
+    line-height: 54px;
     height: 100%;
     cursor: pointer;
     transition: background .3s;
@@ -147,7 +150,7 @@ export default {
     margin-right: 8px;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(36, 91, 132, 0.06)
     }
   }
 
@@ -171,7 +174,7 @@ export default {
 
   .right-menu {
     height: 100%;
-    line-height: 50px;
+    line-height: 58px;
     display: flex;
     align-items: center;
     margin-left: auto;
@@ -185,48 +188,61 @@ export default {
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
-      color: #5a5e66;
+      color: rgba(16, 37, 63, 0.7);
       vertical-align: text-bottom;
+      border-radius: 14px;
 
       &.hover-effect {
         cursor: pointer;
         transition: background .3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(36, 91, 132, 0.06)
         }
       }
     }
 
     .avatar-container {
-      margin-right: 0px;
-      padding-right: 0px;
+      margin-right: 0;
+      padding-right: 0;
+      display: flex;
+      align-items: center;
 
       .avatar-wrapper {
-        margin-top: 10px;
-        right: 8px;
+        margin-top: 0;
+        right: 0;
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 46px;
+        padding: 6px 12px 6px 6px;
+        border-radius: 999px;
+        background: #f8fafc;
+        border: 1px solid rgba(148, 163, 184, 0.22);
 
         .user-avatar {
           cursor: pointer;
-          width: 30px;
-          height: 30px;
+          width: 34px;
+          height: 34px;
           border-radius: 50%;
         }
 
         .user-nickname{
-          position: relative;
-          bottom: 10px;
-          left: 2px;
+          display: inline-flex;
+          align-items: center;
           font-size: 14px;
-          font-weight: bold;
+          font-weight: 700;
+          line-height: 1;
+          color: #10253f;
         }
 
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 18px;
           font-size: 12px;
         }
       }

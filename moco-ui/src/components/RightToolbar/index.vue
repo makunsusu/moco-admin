@@ -195,6 +195,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.top-right-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+::v-deep .el-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+::v-deep .el-button.is-circle {
+  width: 34px;
+  height: 34px;
+  background: #fff;
+  border-color: rgba(148, 163, 184, 0.18);
+  color: rgba(16, 37, 63, 0.74);
+  box-shadow: none;
+}
+
+::v-deep .el-button.is-circle:hover {
+  background: rgba(36, 91, 132, 0.06);
+  border-color: rgba(63, 125, 178, 0.28);
+  color: #163f60;
+}
+
 ::v-deep .el-transfer__button {
   border-radius: 50%;
   padding: 12px;
