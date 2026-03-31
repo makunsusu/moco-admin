@@ -70,6 +70,36 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
+    background:
+      radial-gradient(circle at 8% 18%, rgba(15, 184, 184, 0.14), transparent 18%),
+      radial-gradient(circle at 88% 10%, rgba(27, 108, 168, 0.2), transparent 24%),
+      linear-gradient(180deg, #fbfdff 0%, #f3f8ff 44%, #edf5ff 100%);
+    overflow: hidden;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    &::before {
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(27, 108, 168, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(27, 108, 168, 0.035) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.4), transparent 85%);
+      opacity: 0.32;
+    }
+
+    &::after {
+      top: -120px;
+      right: -80px;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.24), rgba(56, 189, 248, 0));
+    }
 
     &.mobile.openSidebar {
       position: fixed;
@@ -83,8 +113,8 @@ export default {
   }
 
   .drawer-bg {
-    background: #000;
-    opacity: 0.3;
+    background: rgba(9, 20, 36, 0.42);
+    backdrop-filter: blur(8px);
     width: 100%;
     top: 0;
     height: 100%;

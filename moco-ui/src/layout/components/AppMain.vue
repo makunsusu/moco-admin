@@ -51,12 +51,44 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
+  padding: 8px 0 20px;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &::before {
+    left: 22px;
+    right: 22px;
+    top: 12px;
+    height: 180px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(27, 108, 168, 0.07), rgba(15, 184, 184, 0.03), rgba(255, 255, 255, 0.42));
+    filter: blur(2px);
+  }
+
+  &::after {
+    top: 24px;
+    right: 36px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.16), rgba(14, 165, 233, 0));
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 
   &:fullscreen,
   &:-webkit-full-screen,
   &:-moz-full-screen,
   &:-ms-fullscreen {
-    background: #fff;
+    background: #fffaf2;
     overflow-y: auto;
   }
 }
@@ -130,11 +162,11 @@ export default {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #c0c0c0;
+  background: linear-gradient(180deg, rgba(240, 138, 36, 0.7), rgba(16, 37, 63, 0.34));
   border-radius: 3px;
 }
 </style>
